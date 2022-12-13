@@ -1,0 +1,22 @@
+nav {
+	background: var(--back);
+	border-bottom: 2px solid #282828;
+	display: flex;
+	justify-content: space-between;
+}
+
+nav .nav-right {
+	display: flex;
+}
+
+nav .nav-right a {
+	color: var(--text);
+	font-family: monospace;
+	margin: 12px;
+	font-size: 24px;
+	text-decoration: none;
+}
+
+nav .nav-right a:hover {
+	color: var(--text-2);
+}

@@ -1,0 +1,18 @@
+:root {
+	--text: #dddddd;
+	--text-2: #a3a3a3;
+	--back: #2d3134;
+	--back-2: #4b555c;
+	--highlight: #1683bd;
+	--highlight-2: #10618d;
+}
+
+body {
+	background: var(--back-2);
+	margin: 0;
+}
+
+#root {
+	height: 100%;
+    width: 100%;
+}
