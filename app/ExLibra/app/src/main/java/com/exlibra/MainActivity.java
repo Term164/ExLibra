@@ -1,9 +1,17 @@
 package com.exlibra;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -17,13 +25,15 @@ import com.exlibra.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
-    @Override
+   /* @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -44,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,4 +85,61 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
+
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+
+    Button googlebtn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        googlebtn = findViewById(R.id.google);
+
+        gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        gsc= GoogleSignIn.getClient(this,gso);
+
+        googlebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SignIn();
+            }
+        });
+
+
+
+
+    }
+
+    private void SignIn() {
+        Intent intent=gsc.getSignInIntent();
+        startActivityForResult(intent, 100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            Task<GoogleSignInAccount> task=GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                task.getResult(ApiException.class);
+
+            } catch (ApiException e) {
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
+
 }
