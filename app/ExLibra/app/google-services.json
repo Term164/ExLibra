@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "60246911702",
+    "project_id": "exlibra-563bd",
+    "storage_bucket": "exlibra-563bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60246911702:android:666fac77b311dc3c1fb777",
+        "android_client_info": {
+          "package_name": "com.example.exlibra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60246911702-79b62mcqoqh2vhisi1iend9qs5va7r2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmyXwNkwIw1iJ6UsIMDqi4cy1iQ6VDaLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60246911702-79b62mcqoqh2vhisi1iend9qs5va7r2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60246911702:android:f2bd810242c371e91fb777",
+        "android_client_info": {
+          "package_name": "com.exlibra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60246911702-79b62mcqoqh2vhisi1iend9qs5va7r2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmyXwNkwIw1iJ6UsIMDqi4cy1iQ6VDaLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60246911702-79b62mcqoqh2vhisi1iend9qs5va7r2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
