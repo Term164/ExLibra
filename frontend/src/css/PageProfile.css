@@ -1,0 +1,222 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+.content {
+	display: flex;
+	align-items: stretch;
+	max-width: 1300px;
+	margin: auto;
+	height: calc(100% - 56px);
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	border-left: 2px solid #00000020;
+	border-right: 2px solid #00000020;
+}
+
+.profile {
+	min-height: 400px;
+	background: var(--back);
+	width: 400px;
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	align-items: center;
+	border-right: 2px solid #00000020;
+}
+
+.profile .profile-image {
+	margin: 40px;
+	position: relative;
+}
+
+.profile-image .overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	opacity: 0;
+}
+
+.profile-image:hover .overlay, .profile-image.hover .overlay {
+	opacity: 0.7;
+}
+
+.profile-image input {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	border-radius: 6px;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.profile-image img {
+	object-fit: cover;
+	width: 200px;
+	height: 200px;
+	display: block;
+	border-radius: 6px;
+}
+
+.profile-info {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 40px;
+}
+
+.profile-info .line {
+	display: flex;
+}
+
+.profile-info h3 {
+	width: 68px;
+	color: var(--text);
+	font-family: monospace;
+}
+
+.profile-info input {
+	margin: 10px;
+	background: #222526;
+	border: 0;
+	color: var(--text);
+	padding: 4px;
+	font-family: monospace;
+	border-radius: 6px;
+	width: 200px;
+}
+
+.options {
+	margin-bottom: 40px;
+}
+
+.options button, .options input {
+	background: var(--highlight);
+	color: var(--text);
+	border: none;
+	padding: 3px 8px;
+	margin: 5px;
+	font-family: monospace;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+.options button:hover, .options input:hover {
+	background: var(--highlight-2);
+}
+
+
+
+.books {
+	flex: 1;
+	background: var(--back);
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.books .section {
+	width: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+
+.books .section h2 {
+	color: var(--text);
+	font-family: monospace;
+	margin: 40px 20px 20px;
+}
+
+.books .section .book-area {
+	width: 300px;
+	height: 500px;
+	border-radius: 6px;
+	border: 2px solid #00000050;
+	background: #00000020;
+	overflow: hidden;
+	position: relative;
+}
+
+.book-area .scroll {
+	display: flex;
+	flex-direction: column;
+	top: 0px;
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+
+.book-area .scroll .item {
+	margin: 5px;
+	padding: 5px;
+	border: 2px solid var(--back-2);
+	border-radius: 6px;
+	cursor: pointer;
+	background: #222526;
+}
+
+.book-area .scroll .item:hover {
+	background: var(--highlight-2);
+}
+
+.book-area .scroll .selected {
+	background: var(--highlight);
+}
+
+.book-area .scroll .item h3 {
+	color: var(--text);
+	font-size: 18px;
+	font-family: monospace;
+	margin: 0;
+}
+
+.book-area .scroll .item p {
+	color: var(--text);
+	font-size: 13px;
+	font-family: monospace;
+	margin: 0;
+}
+
+.book-area .scroll .item h4 {
+	color: var(--text);
+	font-size: 13px;
+	font-family: monospace;
+	margin: 0;
+	padding: 3px;
+	border-radius: 6px;
+	border: 1px solid var(--back-2);
+	margin-right: 4px;
+}
+
+.book-area .scroll .item .sell {
+	background: #096c09;
+}
+
+.book-area .scroll .item .own {
+	background: #0e4985;
+}
+
+.book-area .scroll .item .upper {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.book-area .scroll .item .upper > div {
+	display: flex;
+	align-items: flex-start;
+}
+
+.section .options {
+	margin: 20px;
+}

@@ -1,0 +1,143 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	background: var(--back);
+}
+
+.content {
+	display: flex;
+	align-items: stretch;
+	max-width: 1000px;
+	margin: auto;
+	height: calc(100% - 56px);
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	border-left: 2px solid #00000020;
+	border-right: 2px solid #00000020;
+}
+
+.left {
+	min-height: 400px;
+	background: var(--back);
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	align-items: center;
+	padding: 40px;
+}
+
+.book-image {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	margin-bottom: 40px;
+}
+
+.book-image .overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	opacity: 0;
+}
+
+.book-image input {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	border-radius: 6px;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.book-image img {
+	object-fit: cover;
+	width: 200px;
+	height: 320px;
+	display: block;
+	border-radius: 6px;
+}
+
+
+.right {
+	min-height: 400px;
+	background: var(--back);
+	display: flex;
+	padding: 40px;
+	width: 300px;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.right .line {
+	margin-bottom: 20px;
+	display: flex;
+}
+
+.right .line textarea, .right .line input {
+	min-width: 100%;
+	max-width: 100%;
+	background: #11111160;
+	border: 0;
+	color: var(--text);
+	padding: 4px;
+	font-size: 16px;
+	font-family: monospace;
+	border-radius: 6px;
+	box-sizing: border-box;
+}
+
+.right .line textarea {
+	min-height: 100px;
+	max-height: 100px;
+}
+
+.right .line select {
+	min-width: 100%;
+	max-width: 100%;
+	background: #11111160;
+	border: 0;
+	color: var(--text);
+	padding: 3px;
+	font-size: 16px;
+	font-family: monospace;
+	border-radius: 6px;
+	box-sizing: border-box;
+}
+
+.right .center {
+	justify-content: center;
+}
+
+button {
+	background: var(--highlight);
+	color: var(--text);
+	border: none;
+	padding: 3px 8px;
+	font-family: monospace;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+button:hover {
+	background: var(--highlight-2);
+}
+
+
+@media (max-width: 680px) {
+
+	.left {
+		width: 100%;
+	}
+
+	.right {
+		width: 100%;
+	}
+
+}
