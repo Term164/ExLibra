@@ -1,0 +1,40 @@
+.content-pl {
+    display: flex;
+    max-width: 300px;
+    margin: 120px auto 0;
+    background: var(--back);
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content-pl h2 {
+	margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-family: monospace;
+}
+
+.content-pl .reg {
+    width: min-content;
+}
+
+.content-pl .reg input {
+    margin-bottom: 10px;
+    background: #222526;
+    border: 0;
+    color: var(--text);
+    padding: 4px;
+    font-family: monospace;
+    border-radius: 6px;
+    width: 180px;
+}
+
+.content-pl .reg .line {
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-pl .google-reg {
+    margin-top: 20px;
+}

@@ -4,7 +4,7 @@ import tempImg1 from '../images/temp-book.jpg';
 
 export default function PageSell() {
   return (
-    <div className="content">
+    <div className="content-ps">
 		<div className="left">
 			<div className="book-image">
 				<img src={tempImg1} />

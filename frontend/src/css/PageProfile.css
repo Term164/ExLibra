@@ -3,7 +3,7 @@ html, body {
 	width: 100%;
 }
 
-.content {
+.content-pp {
 	display: flex;
 	align-items: stretch;
 	max-width: 1300px;

@@ -1,27 +1,23 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
 import {getDatabase, set, ref, update, onValue} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+import { getFirebaseConfig } from './firebase-config.js';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+const firebaseConfig = getFirebaseConfig();
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDe8074PwjBQGoMrGvl0UU-RVL0dRTlye0",
-    authDomain: "exlibra-563bd.firebaseapp.com",
-    projectId: "exlibra-563bd",
-    storageBucket: "exlibra-563bd.appspot.com",
-    messagingSenderId: "60246911702",
-    appId: "1:60246911702:web:c6dfc71fbe0db8de1fb777"
-  };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-    //pridobitev UID od user
-    //console.log(firebase.auth().currentUser);
+//pridobitev UID od user
+getAuth().onAuthStateChanged(user =>{
+  console.log(user);
+});
 
-    
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // User is signed in, see docs for a list of available properties

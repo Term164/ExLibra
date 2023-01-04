@@ -4,7 +4,7 @@ html, body {
 	background: var(--back);
 }
 
-.content {
+.content-ps {
 	display: flex;
 	align-items: stretch;
 	max-width: 1000px;
@@ -15,9 +15,10 @@ html, body {
 	justify-content: center;
 	border-left: 2px solid #00000020;
 	border-right: 2px solid #00000020;
+	background: var(--back);
 }
 
-.left {
+.content-ps .left {
 	min-height: 400px;
 	background: var(--back);
 	display: flex;
@@ -65,7 +66,7 @@ html, body {
 }
 
 
-.right {
+.content-ps .right {
 	min-height: 400px;
 	background: var(--back);
 	display: flex;
@@ -75,12 +76,12 @@ html, body {
 	align-items: stretch;
 }
 
-.right .line {
+.content-ps .right .line {
 	margin-bottom: 20px;
 	display: flex;
 }
 
-.right .line textarea, .right .line input {
+.content-ps .right .line textarea, .right .line input {
 	min-width: 100%;
 	max-width: 100%;
 	background: #11111160;
@@ -93,12 +94,12 @@ html, body {
 	box-sizing: border-box;
 }
 
-.right .line textarea {
+.content-ps .right .line textarea {
 	min-height: 100px;
 	max-height: 100px;
 }
 
-.right .line select {
+.content-ps .right .line select {
 	min-width: 100%;
 	max-width: 100%;
 	background: #11111160;
@@ -111,7 +112,7 @@ html, body {
 	box-sizing: border-box;
 }
 
-.right .center {
+.content-ps .right .center {
 	justify-content: center;
 }
 
