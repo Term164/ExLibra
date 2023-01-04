@@ -40,6 +40,8 @@ public class chatFragment extends Fragment {
     private ArrayList<book> bookList = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
 
+    String TAG = "DEBUG";
+
     //constructor
     public chatFragment() {
     }
@@ -50,7 +52,7 @@ public class chatFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
-        Log.e("search", "fragment newInstance");
+        Log.e("chat", "fragment newInstance");
         return fragment;
     }
 
@@ -66,7 +68,7 @@ public class chatFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("books", "fragment newInstance");
+        Log.e("chat", "fragment newInstance");
         final View view = inflater.inflate(R.layout.fragment_chat, container, false);
         //initialise ui components
         ///inal EditText searchInput = view.findViewById(R.id.search);
@@ -77,7 +79,7 @@ public class chatFragment extends Fragment {
         View.OnClickListener clickEvent = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("DIO PORCO CANE");
+                Log.e("DEBUG","DIO PORCO CANE");
                 //call get search results method
                 //getSearchResults(searchInput.getText().toString(), view);
             }
@@ -88,10 +90,6 @@ public class chatFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-
-
 
         ImageButton sendButton = getView().findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -124,14 +122,42 @@ public class chatFragment extends Fragment {
         //initialise firestore connection
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
+        String myEmail = usr.getEmail();
+        Log.e("DEBUG", "i am "+usr.getEmail());
+
+        CollectionReference cr = db.collection("/group").document("x8wflwkjpKEVTUx3zuGa").collection("/messages");
+        // at this point we should already know the group, group is given by a chat-group-list activity, when you choose which group you want to chat
+        String chatGroup = "x8wflwkjpKEVTUx3zuGa/messages";
+        Log.d(TAG, "document: "+cr);
+        Object user = cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (!task.isSuccessful()){
+                    Log.e("ERROR", "Error while trying to decompose chat group");
+                    return;
+                }
+                for (DocumentSnapshot x : task.getResult().getDocuments()) {
+                    Log.d(TAG, "message: "+x.getString("messageText"));
+                    Log.i(TAG, "sentBy: "+x.getString("sentBy"));
+                }
 
 
-        CollectionReference cr = db.collection("/group");
-        Object user = db.collection("/group").document().getId();
-        System.out.println("And our user is: "+cr);
+
+                // Let's say we have the other mail, the person we're talking to.
+                // This is strictly for finding a group, each message has a "sentBy" field
+                String otherEmail = "other.person@gmail.com";
+
+
+
+            }
+        });
+
         //query all documents on the market with the input isbn
         //db.collection("books").whereEqualTo("isbn", input).whereEqualTo("market", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
         // });
+
+
+
     }
 
 
@@ -143,12 +169,9 @@ public class chatFragment extends Fragment {
 
 
 
-
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 
 
 }

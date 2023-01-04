@@ -63,8 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
       //  } catch (IOException e) {
       //     mImageView.setImageResource(R.drawable.dartmouth);
       //  }
-        photoDirectory();
-        loadSnap();
+      //  photoDirectory();
+        // loadSnap();
 
 
         final Button button = (Button) findViewById(R.id.button_Change);

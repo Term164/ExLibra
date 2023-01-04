@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context=".ProfileActivity">>
+    tools:context=".ProfileActivity">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:focusableInTouchMode="true">
+            <!--
             <ImageView
                 android:id="@+id/imageView_Profile_Photo"
                 android:layout_width="80dp"
@@ -31,6 +32,9 @@
                 android:layout_below="@+id/textView_Profile_Photo"
                 android:layout_toLeftOf="@+id/button_Change"
                 android:src="@drawable/dartmouth"/>
+             -->
+
+
             <Button
                 android:id="@+id/button_Change"
                 android:layout_width="wrap_content"
@@ -50,15 +54,16 @@
             android:text="@string/name"
             android:layout_below="@+id/imageView_Profile_Photo">
         </TextView>
+
         <EditText
             android:id="@+id/editText_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:inputType="textAutoComplete"
             android:layout_below="@+id/textView_Name"
-            android:hint="@string/name">
-        </EditText>
+            android:layout_margin="5dp"
+            android:hint="@string/name"
+            android:inputType="textAutoComplete"
+            android:minHeight="48dp"></EditText>
         <TextView
             android:id="@+id/textView_Email"
             android:layout_width="wrap_content"
