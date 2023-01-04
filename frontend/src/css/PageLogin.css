@@ -1,18 +1,32 @@
 .content-pl {
     display: flex;
-    max-width: 300px;
-    margin: 120px auto 0;
+    max-width: 400px;
+    margin: 30px auto 0;
     background: var(--back);
     padding: 20px;
     flex-direction: column;
     align-items: center;
 }
 
-.content-pl h2 {
+.content-pl h1 {
+    font-size: 350%;
 	margin-top: 0;
     margin-bottom: 10px;
     color: var(--text);
     font-family: monospace;
+}
+
+.content-pl h2 {
+    font-size: 200%;
+	margin-top: 10px;
+    margin-bottom: 10px;
+    color: red;
+    font-family: monospace;
+}
+
+.content-pl button{
+    font-size: 180%;
+    padding: 10px;
 }
 
 .content-pl .reg {
@@ -20,6 +34,7 @@
 }
 
 .content-pl .reg input {
+    font-size: 180%;
     margin-bottom: 10px;
     background: #222526;
     border: 0;
@@ -27,7 +42,7 @@
     padding: 4px;
     font-family: monospace;
     border-radius: 6px;
-    width: 180px;
+    width: 320px;
 }
 
 .content-pl .reg .line {

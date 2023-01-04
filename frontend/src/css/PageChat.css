@@ -4,7 +4,6 @@ html, body {
 }
 
 body {
-	display: table;
 	margin: 0;
 }
 
@@ -26,6 +25,7 @@ body {
 	position: absolute;
     bottom: 0;
     width: -webkit-fill-available;
+    width: -moz-available;
 }
 
 .content-pc .left .container {

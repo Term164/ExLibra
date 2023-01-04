@@ -1,6 +1,6 @@
 import React from 'react';
 import './css/Menu.css';
-import logo from './images/icon-book.png';
+import logo from './images/LogoNoText.png';
 
 export default function Menu() {
   return (
@@ -12,7 +12,7 @@ export default function Menu() {
 			<a href="/">Knjige</a>
 			<a href="/chat">Pogovor</a>
 			<a href="/profile">Profil</a>
-			<a href="/logout">Izpis</a>
+			<a href="/login">Prijava</a>
 		</div>
 	</nav>
   )
