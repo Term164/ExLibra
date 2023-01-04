@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExLibra Chat</title>  
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
+  </head>
+  <body>
+    <h1>Users: </h1>
+    <ul id="userList">
+    </ul>
+    <h2 style="color: green;">Chat</h2>
+    <ul style="list-style: none;" id="chat">
+
+    </ul>
+
+    <form action="#" id="message-form">
+        <label for="message">Message:</label>
+        <input type="text" id="message">
+        <button id="submit" type="submit">
+            Send
+        </button>
+    </form>
+
+    <script type="module" src="../src/chat.js"></script>
+  </body>
+</html>
+
+
