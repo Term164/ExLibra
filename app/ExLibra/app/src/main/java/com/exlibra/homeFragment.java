@@ -10,19 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class homeFragment extends Fragment {
 
     //initialise boilerplate attributes and methods
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static String Name = "param1";
+    private static String Mail = "param2";
+
+    TextView name, mail;
 
     private OnFragmentInteractionListener mListener;
-
-
 
 
     public homeFragment() {
@@ -31,8 +33,11 @@ public class homeFragment extends Fragment {
     public static homeFragment newInstance(String param1, String param2) {
         homeFragment fragment = new homeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(Name, param1);
+        args.putString(Mail, param2);
+        Name = param1;
+        Mail = param2;
+        Log.e("TAAAAAG", "name is "+Name+" mail "+Mail);
         fragment.setArguments(args);
         Log.e("home", "fragment newInstance");
         return fragment;
@@ -42,9 +47,8 @@ public class homeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String mParam1 = getArguments().getString(ARG_PARAM1);
-            String mParam2 = getArguments().getString(ARG_PARAM2);
-
+            //String NameArg = getArguments().getString(Name);
+            //String MailArg = getArguments().getString(Mail);
 
         }
     }
@@ -64,6 +68,18 @@ public class homeFragment extends Fragment {
         }
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.e("DEBUG", "views "+name+" "+mail);
+        name = getView().findViewById(R.id.name);
+        mail = getView().findViewById(R.id.mail);
+        name.setText(Name);
+        mail.setText(Mail);
+    }
+
+    public void onViewCreated(){}
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

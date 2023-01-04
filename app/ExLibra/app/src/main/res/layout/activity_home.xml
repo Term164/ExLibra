@@ -7,16 +7,19 @@
     android:orientation="vertical"
     tools:context=".HomeActivity">
 
-  <!--
-  <androidx.appcompat.widget.Toolbar
-      android:id="@+id/my_toolbar"
-      style="@style/toolbarTheme"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="0"
+
+
+    <androidx.appcompat.widget.Toolbar
+     android:id="@+id/my_toolbar"
+     style="@style/toolbarTheme"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_weight="0"
       android:theme="@style/AppTheme"
-      app:titleTextColor="@color/white" />
-  -->
+
+        app:titleTextColor="@color/white" />
+
+
 
   <FrameLayout
       android:id="@+id/content"
@@ -38,9 +41,5 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:menu="@menu/bottom_nav" />
-
-
-
-
 
 </LinearLayout>
