@@ -119,8 +119,8 @@ public class booksFragment extends Fragment {
                     oglas.put("opis", doc.get("opis"));
 
                     Log.e("DEBUG", doc.get("prodajalec")+"");
-                    Object user =db.collection("/users").document( doc.get("prodajalec").toString() ).get("");
-                    Log.e("DEBUG", user.toString());
+                    //Object user =db.collection("/users").document( doc.get("prodajalec").toString() ).get("");
+                    //Log.e("DEBUG", user.toString());
 
                     items.add(oglas);
 

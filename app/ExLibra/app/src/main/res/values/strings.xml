@@ -28,5 +28,20 @@
     <string name="logoutActionBar"> Logout </string>
     <string name="Profile">Profile</string>
     <string name="chat">Chat</string>
+    <string name="profile">profile</string>
+    <string name="change">change</string>
+    <string name="graduating_class">graduating_class</string>
+    <string name="major">major</string>
+    <string name="save">save</string>
+    <string name="cancel">cancel</string>
+    <string name="male">male</string>
+    <string name="female">female</string>
+    <string name="gender">gender</string>
+    <string name="phone">phone</string>
+    <string name="email">email</string>
+    <string name="name">name</string>
+    <string name="profile_photo_file_name">profile_photo_file_name</string>
+    <string name="pick_profile_picture">pick_profile_picture</string>
+    <string name="settings">settings</string>
 
 </resources>

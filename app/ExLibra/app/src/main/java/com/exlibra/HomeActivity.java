@@ -9,12 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,9 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.*;
 
-import java.util.jar.Attributes;
-
-public class HomeActivity extends AppCompatActivity implements homeFragment.OnFragmentInteractionListener, booksFragment.OnFragmentInteractionListener, searchFragment.OnFragmentInteractionListener{
+public class HomeActivity extends AppCompatActivity implements homeFragment.OnFragmentInteractionListener, booksFragment.OnFragmentInteractionListener, chatFragment.OnFragmentInteractionListener{
 
     public String name,mail;
 
@@ -61,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
                     return true;
                 case R.id.action_chat:
                     FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = searchFragment.newInstance("search", "fragment");
+                    selectedFragment = chatFragment.newInstance("search", "fragment");
                     transaction3.replace(R.id.content, selectedFragment);
                     transaction3.commit();
                     return true;
