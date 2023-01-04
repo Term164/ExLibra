@@ -7,7 +7,7 @@ export default function PageSell() {
     <div className="content-ps">
 		<div className="left">
 			<div className="book-image">
-				<img src={tempImg1} />
+				<img src={tempImg1} alt="sell" />
 				<input type="file" accept=".png,.jpg,.jpeg" name="profile" />
 			</div>
 		</div>
