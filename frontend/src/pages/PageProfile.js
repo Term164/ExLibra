@@ -4,7 +4,7 @@ import tempImg1 from '../images/pfp1.jpg';
 
 export default function PageProfile() {
   return (
-    <div className="content">
+    <div className="content-pp">
 		<div className="profile">
 
 			<div className="profile-image">
