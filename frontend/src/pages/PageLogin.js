@@ -55,10 +55,10 @@ export default function PageLogin() {
         <h2 style={{
           display: isActive ? '' : 'none',
         }
-        }>Wrong username or password.</h2>
+        }>Napačno geslo ali email.</h2>
         <div className="reg">
           <form onSubmit={defaultLoginHandler}>
-            <input ref={email} type="text" placeholder="Uporabnik/Email..." />
+            <input ref={email} type="text" placeholder="Email..." />
             <input ref={password} type="password" placeholder="Geslo..." />
             <div className="line">
               <button type='submit'>Prijava</button>

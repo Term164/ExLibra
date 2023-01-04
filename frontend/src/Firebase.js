@@ -18,5 +18,27 @@ async function signInDefault(email, password){
     await signInWithEmailAndPassword(getAuth(), email, password);
 }
 
+async function registerUserDefault(email, password, username){
+    await createUserWithEmailAndPassword(getAuth(),email,password).then((userCredential) => {
+        const docData = {
+            email: email,
+            password: password,
+            groups: [],
+            username: username,
+            name: "",
+            surname: "",
+            tel: "",
+            profileurl: "/pfp/default.png",
+            ads: [],
+            wishlist: [],
+        }
+        setDoc(doc(firestore, `users/${userCredential.user.uid}`), docData);
+    });
+}
 
-export {signInWithGoogle, signInDefault};
+async function saveNewUserData(){
+
+}
+
+
+export {signInWithGoogle, signInDefault, registerUserDefault};
