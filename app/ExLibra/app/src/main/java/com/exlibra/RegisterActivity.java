@@ -79,8 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         CollectionReference users = db.collection("/users");
 
-
-
                         Map<String, Object> user = new HashMap<>();
                         user.put("email", email);
                         user.put("password", "");
@@ -94,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
                         user.put("urlslike", "/pfp/default.png"); // ali pa pfp/default.png
                         user.put("seznamoglasov", new ArrayList<Object>());
                         user.put("seznamzelja", new ArrayList<Object>());
+                        user.put("groups", new ArrayList<Object>());
 
                         users.document(UID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

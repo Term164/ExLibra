@@ -9,8 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +23,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class booksFragment extends Fragment {
 
@@ -33,17 +40,23 @@ public class booksFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    static FirebaseFirestore db;
+
+    ListView list;
+    ArrayList<Object> items = new ArrayList<>();
+
     //constructor
     public booksFragment() {
     }
 
-    public static booksFragment newInstance(String param1, String param2) {
+    public static booksFragment newInstance(String param1, String param2, FirebaseFirestore dbarg) {
         booksFragment fragment = new booksFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
-        Log.e("books", "fragment newInstance");
+        db = dbarg;
+        Log.e("DEBUG", db.toString());
         return fragment;
     }
 
@@ -54,6 +67,8 @@ public class booksFragment extends Fragment {
             String mParam1 = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -72,10 +87,59 @@ public class booksFragment extends Fragment {
             }
         };
 
+        //Google AUTH je delal probleme tukaj
         //initialise recycle view
-        getScannedBookTitles(view);
-        getRentedBookTitles(view);
+        //getScannedBookTitles(view);
+        //getRentedBookTitles(view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        list = getView().findViewById(R.id.list);
+        //for (int i = 0; i < 30; i++)
+        //  items.add("Item: "+i);
+
+        CollectionReference cr = db.collection("/oglas");
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("ERRorrrrrrr", task.getException().toString());
+                    return;
+                }
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    Log.d("DATAAAaaaaaa", doc.getData().toString());
+
+                    Map<Object, Object> oglas = new HashMap<>();
+                    oglas.put("prodano", false);
+                    oglas.put("cena", doc.get("cena"));
+                    oglas.put("opis", doc.get("opis"));
+
+                    Log.e("DEBUG", doc.get("prodajalec")+"");
+                    Object user =db.collection("/users").document( doc.get("prodajalec").toString() ).get("");
+                    Log.e("DEBUG", user.toString());
+
+                    items.add(oglas);
+
+                }
+
+                ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getActivity(), android.R.layout.simple_list_item_1, items);
+                list.setAdapter(adapter);
+
+            }
+        });
+
+        /*
+        Log.e("DEBUG", items.size()+"");
+        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getActivity(), android.R.layout.simple_list_item_1, items);
+        list.setAdapter(adapter);
+        */
+
+
+
     }
 
     private void getRentedBookTitles(final View view) {
