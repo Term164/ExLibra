@@ -1,6 +1,6 @@
 import {React, useRef, useState} from 'react';
 import '../css/PageRegister.css';
-import {signInDefault, registerUserDefault}  from '../firebase.js';
+import {signInDefault, registerUserDefault}  from '../Firebase.js';
 import { useNavigate } from 'react-router-dom';
 import { SpinningCircles } from 'react-loading-icons'
 import logo from '../images/exLibraLogoWhite.png'
