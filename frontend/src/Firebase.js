@@ -10,7 +10,7 @@ const firestore = getFirestore();
 
 async function signInWithGoogle(){
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(getAuth(), provider);    
+    return await signInWithPopup(getAuth(), provider);
 }
 
 async function signInDefault(email, password){
@@ -43,6 +43,10 @@ function isUserSignedIn() {
     return !!getAuth().currentUser;
 }
 
+function getUserSignedIn() {
+    return getAuth().currentUser;
+}
+
 function getUserName() {
     // TODO 5: Return the user's display name.
     return getAuth().currentUser.displayName;
@@ -50,41 +54,41 @@ function getUserName() {
 
 // Initiate firebase auth
 function initFirebaseAuth() {
-    onAuthStateChanged(getAuth(), authStateObserver);
+    getAuth().onAuthStateChanged(getAuth(), authStateObserver);
 }
 
 function authStateObserver(user) {
     if (user) {
       // User is signed in!
       // Get the signed-in user's profile pic and name.
-      var profilePicUrl = getProfilePicUrl();
+      var profilePicUrl = getAuth().getProfilePicUrl();
       var userName = getUserName();
   
       // Set the user's profile pic and name.
-      userPicElement.style.backgroundImage =
-        'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
-      userNameElement.textContent = userName;
+      getAuth().userPicElement.style.backgroundImage =
+        'url(' + getAuth().addSizeToGoogleProfilePic(profilePicUrl) + ')';
+      getAuth().userNameElement.textContent = userName;
   
       // Show user's profile and sign-out button.
-      userNameElement.removeAttribute('hidden');
-      userPicElement.removeAttribute('hidden');
-      signOutButtonElement.removeAttribute('hidden');
+      getAuth().userNameElement.removeAttribute('hidden');
+      getAuth().userPicElement.removeAttribute('hidden');
+      getAuth().signOutButtonElement.removeAttribute('hidden');
   
       // Hide sign-in button.
-      signInButtonElement.setAttribute('hidden', 'true');
+      getAuth().signInButtonElement.setAttribute('hidden', 'true');
   
       // We save the Firebase Messaging Device token and enable notifications.
-      saveMessagingDeviceToken();
+      getAuth().saveMessagingDeviceToken();
     } else {
       // User is signed out!
       // Hide user's profile and sign-out button.
-      userNameElement.setAttribute('hidden', 'true');
-      userPicElement.setAttribute('hidden', 'true');
-      signOutButtonElement.setAttribute('hidden', 'true');
+      getAuth().userNameElement.setAttribute('hidden', 'true');
+      getAuth().userPicElement.setAttribute('hidden', 'true');
+      getAuth().signOutButtonElement.setAttribute('hidden', 'true');
   
       // Show sign-in button.
-      signInButtonElement.removeAttribute('hidden');
+      getAuth().signInButtonElement.removeAttribute('hidden');
     }
 }
 
-export {signInWithGoogle, signInDefault, registerUserDefault, isUserSignedIn, getUserName};
+export {getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName};
