@@ -9,12 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,16 +24,46 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.*;
 
-public class HomeActivity extends AppCompatActivity implements homeFragment.OnFragmentInteractionListener, booksFragment.OnFragmentInteractionListener, searchFragment.OnFragmentInteractionListener{
+public class HomeActivity extends AppCompatActivity implements homeFragment.OnFragmentInteractionListener, booksFragment.OnFragmentInteractionListener, chatFragment.OnFragmentInteractionListener{
 
-    TextView name,mail;
-    Button logout;
+    public String name,mail;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
     FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    public FirebaseFirestore db;
+
+    //method to manage fragments for bottom nav
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment;
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    selectedFragment = homeFragment.newInstance(name, mail);
+                    transaction.replace(R.id.content, selectedFragment);
+                    transaction.commit();
+                    return true;
+                case R.id.action_books:
+                    FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
+                    selectedFragment = booksFragment.newInstance("books", "fragment", db);
+                    transaction2.replace(R.id.content, selectedFragment);
+                    transaction2.commit();
+                    return true;
+                case R.id.action_chat:
+                    FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
+                    selectedFragment = chatFragment.newInstance("search", "fragment");
+                    transaction3.replace(R.id.content, selectedFragment);
+                    transaction3.commit();
+                    return true;
+            }
+            return false;
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +83,15 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
+        //Testiranje logiranja z googlom != => ==
         if (account!=null){
-            String Name = account.getDisplayName();
-            String Mail = account.getEmail();
+            name = account.getDisplayName();
+            mail = account.getEmail();
 
-            name.setText(Name);
-            mail.setText(Mail);
+            //name.setText(Name);
+            //mail.setText(Mail);
         }
 
-        Log.d("TAAAAAAAAAAAAAAAAAAAG", "LOGOUT "+logout);
         /*
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,33 +102,22 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
         */
 
         db = FirebaseFirestore.getInstance();
-        CollectionReference cr = db.collection("/books");
-        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                    for (QueryDocumentSnapshot doc : task.getResult())
-                        Log.d("DATAAAaaaaaa", doc.getData().toString());
-                else
-                    Log.w("ERRorrrrrrr", task.getException());
-            }
-        });
 
 
         //initialise toolbar
-        //Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        //setSupportActionBar(myToolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
 
         //set up first fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, homeFragment.newInstance("first", "fragment"));
+        transaction.replace(R.id.content, homeFragment.newInstance(name, mail));
         transaction.commit();
 
         //initialise bottom navigation
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.action_books);
+        navigation.setSelectedItemId(R.id.action_home);
 
 
 
@@ -122,35 +137,11 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
 
     }
 
+    private void UserProfile(){
+        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+    }
 
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment;
-            switch (item.getItemId()) {
-                case R.id.action_home:
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = homeFragment.newInstance("home", "fragment");
-                    transaction.replace(R.id.content, selectedFragment);
-                    transaction.commit();
-                    return true;
-                case R.id.action_books:
-                    FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = booksFragment.newInstance("books", "fragment");
-                    transaction2.replace(R.id.content, selectedFragment);
-                    transaction2.commit();
-                    return true;
-                case R.id.action_search:
-                    FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = searchFragment.newInstance("search", "fragment");
-                    transaction3.replace(R.id.content, selectedFragment);
-                    transaction3.commit();
-                    return true;
-            }
-            return false;
-        }
-    };
+
 
     //initialise toolbar options
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -166,6 +157,9 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
         switch (item.getItemId()) {
             case R.id.action_logout:
                 SignOut();
+                return true;
+            case R.id.action_profile:
+                UserProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

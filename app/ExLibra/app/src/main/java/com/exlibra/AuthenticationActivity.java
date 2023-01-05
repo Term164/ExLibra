@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -85,12 +86,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
 
-
-
-
-
-
-
             try {
                 task.getResult(ApiException.class);
                 HomeActivity();
@@ -103,7 +98,8 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void HomeActivity() {
         finish();
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(new Intent(AuthenticationActivity.this, HomeActivity.class));
+        //startActivity(intent);
     }
 }

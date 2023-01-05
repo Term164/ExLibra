@@ -79,21 +79,16 @@ public class RegisterActivity extends AppCompatActivity {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         CollectionReference users = db.collection("/users");
 
-
-
                         Map<String, Object> user = new HashMap<>();
                         user.put("email", email);
                         user.put("password", "");
                         String username;
-                        user.put("uporabniskoime", username = email.split("@")[0]);
-                        Log.d("USERNAME", username);
-                        user.put("ime", username.split("\\.")[0]);
-                        if (username.split("\\.").length > 0)
-                            user.put("priimek", username.split("\\.")[1]);
-                        user.put("tel", "");
-                        user.put("urlslike", "/pfp/default.png"); // ali pa pfp/default.png
-                        user.put("seznamoglasov", new ArrayList<Object>());
-                        user.put("seznamzelja", new ArrayList<Object>());
+                        user.put("username", username = email.split("@")[0]);
+
+                        user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
+                        user.put("ads", new ArrayList<Object>());
+                        user.put("wishlist", new ArrayList<Object>());
+                        user.put("groups", new ArrayList<Object>());
 
                         users.document(UID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

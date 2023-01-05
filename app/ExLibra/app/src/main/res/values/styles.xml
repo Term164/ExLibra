@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowActionBar">false</item> <!-- -->
         <item name="android:windowNoTitle">true</item>
+
     </style>
 
     <style name="toolbarTheme">
@@ -15,6 +16,11 @@
 
     <style name="myDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

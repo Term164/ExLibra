@@ -1,7 +1,6 @@
 html, body {
 	height: 100%;
 	width: 100%;
-	background: var(--back);
 }
 
 .content-ps {
@@ -133,11 +132,11 @@ button:hover {
 
 @media (max-width: 680px) {
 
-	.left {
+	.content-ps .left {
 		width: 100%;
 	}
 
-	.right {
+	.content-ps .right {
 		width: 100%;
 	}
 

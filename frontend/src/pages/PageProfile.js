@@ -1,6 +1,7 @@
 import React from 'react';
 import '../css/PageProfile.css';
 import tempImg1 from '../images/pfp1.jpg';
+import imageOverlay from '../images/upload-image.png';
 
 export default function PageProfile() {
   return (
@@ -9,7 +10,7 @@ export default function PageProfile() {
 
 			<div className="profile-image">
 				<img src={tempImg1} alt="Pfp-1" />
-				<img className="overlay" src="images/upload-image.png" />
+				<img className="overlay" src={imageOverlay} alt="overlay" />
 				<input type="file" accept=".png,.jpg,.jpeg" name="profile" />
 			</div>
 			<div className="profile-info">

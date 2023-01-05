@@ -16,3 +16,25 @@ body {
 	height: 100%;
     width: 100%;
 }
+
+footer {
+	background-color: var(--back);
+    min-height: 60px;
+    width: 100%;
+    display: flex;
+	flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+footer h3 {
+	color: var(--text);
+	font-family: monospace;
+	font-weight: normal;
+}
+
+footer a {
+	color: var(--text);
+	font-family: monospace;
+	text-decoration: none;
+}
