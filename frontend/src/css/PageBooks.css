@@ -34,6 +34,11 @@
 	color: var(--text);
 }
 
+.content-pb .left .filters .filter label {
+	font-family: monospace;
+    margin: 0;
+    color: var(--text);
+}
 
 .content-pb .right {
 	min-height: 200px;

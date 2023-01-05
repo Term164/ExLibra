@@ -1,8 +1,10 @@
 import React from 'react';
 import '../css/PageBooks.css';
+import Footer from '../Footer';
 
 export default function PageBooks() {
   return (
+	<>
     <div className="content-pb">
 		<div className="left">
 			<h2>Filtri:</h2>
@@ -158,5 +160,7 @@ export default function PageBooks() {
 			</div>
 		</div>
 	</div>
+    <Footer />
+	</>
   )
 }
