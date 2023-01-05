@@ -54,10 +54,12 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
                     transaction2.commit();
                     return true;
                 case R.id.action_chat:
-                    FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = chatFragment.newInstance("search", "fragment");
-                    transaction3.replace(R.id.content, selectedFragment);
-                    transaction3.commit();
+                    // create new activity
+                    startActivity(new Intent(HomeActivity.this, ChatActivity.class));
+                    //FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
+                    //selectedFragment = chatFragment.newInstance("search", "fragment");
+                    //transaction3.replace(R.id.content, selectedFragment);
+                    //transaction3.commit();
                     return true;
             }
             return false;
