@@ -1,7 +1,7 @@
 import {React, useRef, useState} from 'react';
 import '../css/PageLogin.css';
 import {BsGoogle} from 'react-icons/bs'
-import { signInWithGoogle, signInDefault}  from '../firebase.js';
+import { signInWithGoogle, signInDefault, getUserSignedIn}  from '../Firebase.js';
 import { SpinningCircles  } from 'react-loading-icons'
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/exLibraLogoWhite.png'
@@ -17,8 +17,13 @@ export default function PageLogin() {
 
   async function googleLoginHandler(e) {
     e.preventDefault();
-    await signInWithGoogle(); 
-    navigate('/');
+    try {
+      const result = await signInWithGoogle();
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+      //TODO need to add some error message or something !!!!!!!!!
+    }
   }
 
   async function defaultLoginHandler(e){
