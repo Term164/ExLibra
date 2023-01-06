@@ -18,8 +18,8 @@ export default function PageLogin() {
   async function googleLoginHandler(e) {
     e.preventDefault();
     try {
-      const result = await signInWithGoogle();
-      navigate('/');
+      await signInWithGoogle();
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
       //TODO need to add some error message or something !!!!!!!!!

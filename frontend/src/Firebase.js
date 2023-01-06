@@ -10,7 +10,19 @@ const firestore = getFirestore();
 
 async function signInWithGoogle(){
     const provider = new GoogleAuthProvider();
-    return await signInWithPopup(getAuth(), provider);
+    let user = await signInWithPopup(getAuth(), provider);
+
+    const uid = user.user.uid;
+    let userRef = doc(firestore, "users", uid);
+    const userData = await getDoc(userRef);
+
+    if(!userData.exists()){
+        try {
+            await saveNewUserData(uid, user.user.displayName, user.user.email);
+        } catch (error) {
+            console.error("Error saving new user data: ", error);
+        }
+    }
 }
 
 async function signInDefault(email, password){
@@ -22,25 +34,34 @@ async function signOutUser(){
 }
 
 async function registerUserDefault(email, password, username){
-    await createUserWithEmailAndPassword(getAuth(),email,password).then((userCredential) => {
-        const docData = {
-            email: email,
-            password: password,
-            groups: [],
-            username: username,
-            name: "",
-            surname: "",
-            tel: "",
-            profileurl: "/pfp/default.png",
-            ads: [],
-            wishlist: [],
+    let user = await createUserWithEmailAndPassword(getAuth(),email,password);
+
+    const uid = user.user.uid;
+    let userRef = doc(firestore, "users", uid);
+    const userData = await getDoc(userRef);
+
+    if(!userData.exists()){
+        try {
+            await saveNewUserData(uid, username, email);
+        } catch (error) {
+            console.error("Error saving new user data: ", error);
         }
-        setDoc(doc(firestore, `users/${userCredential.user.uid}`), docData);
-    });
+    }
 }
 
-async function saveNewUserData(){
-
+async function saveNewUserData(uid, username, email){
+    const docData = {
+        email: email,
+        groups: [],
+        username: username,
+        name: "",
+        surname: "",
+        tel: "",
+        profileurl: "/pfp/default.png",
+        ads: [],
+        wishlist: [],
+    }
+    await setDoc(doc(firestore, `users`, uid), docData);
 }
 
 async function getUserData() {
@@ -80,4 +101,4 @@ function getUserName() {
     return getAuth().currentUser.displayName;
 }
 
-export {saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName};
+export {saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName};
