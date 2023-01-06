@@ -80,13 +80,13 @@ async function getUserData() {
     } 
 }
 
-async function saveUserData(name, surname, username, tel){
+async function saveUserData(name, surname, username, email, tel){
     const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
     await setDoc(documentReference, {
        name: name,
        surname: surname,
        username: username,
-       tel: tel 
+       tel: tel
     }, {merge: true});
 }
 
