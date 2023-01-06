@@ -13,11 +13,9 @@ import { getFirebaseConfig } from './firebase-config.js';
 
 
 logO.addEventListener('click', (e) => {
-    console.log("neki");
     const auth = getAuth();
     signOut(auth).then(() => {
        document.location.href = '../index.html';
-        console.log("dela");
   // Sign-out successful.
     }).catch((error) => {
         console.log("nedela");
