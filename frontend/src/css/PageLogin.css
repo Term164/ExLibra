@@ -20,13 +20,23 @@
     font-size: 200%;
 	margin-top: 10px;
     margin-bottom: 10px;
-    color: red;
+    color: #bb0c5d;
     font-family: monospace;
+    font-weight: normal;
 }
 
-.content-pl button{
+.content-pl button {
     font-size: 180%;
     padding: 10px;
+}
+
+.content-pl .with-icons {
+    display: flex;
+    align-items: center;
+}
+
+.content-pl .with-icons svg {
+    margin-right: 12px;
 }
 
 .content-pl .reg {
