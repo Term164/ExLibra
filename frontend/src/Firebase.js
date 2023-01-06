@@ -54,6 +54,7 @@ async function saveNewUserData(uid, username, email){
         email: email,
         groups: [],
         username: username,
+        password: "",
         name: "",
         surname: "",
         tel: "",
