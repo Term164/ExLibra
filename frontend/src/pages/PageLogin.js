@@ -43,8 +43,6 @@ export default function PageLogin() {
     navigate('/register');
   }
 
-  
-
   return (
     <>
       <div className="content-pl">
@@ -72,7 +70,7 @@ export default function PageLogin() {
         </div>
         <div className="google-reg">
           <form onSubmit={googleLoginHandler}>
-            <button type='submit'><BsGoogle/> Google prijava</button>
+            <button type='submit' className="with-icons"><BsGoogle/> Google prijava</button>
           </form>
         </div>
       </div>

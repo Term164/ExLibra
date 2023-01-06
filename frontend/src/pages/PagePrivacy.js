@@ -5,24 +5,31 @@ export default function PagePrivacy() {
   return (
     <div className="content-ppy">
 		<div className="privacy">
-			<h1 className="center">Privacy</h1>
-			
-            <h2>Title1</h2>
-            <p>A random paragraph can also be an excellent way for a writer to tackle writers' block. Writing block can often happen due to being stuck with a current project that the writer is trying to complete. By inserting a completely random paragraph from which to begin, it can take down some of the issues that may have been causing the writers' block in the first place.</p>
+			<h1 className="center">PRIVACY POLICY</h1>
 
-            <h3>Title2</h3>
-            <ul>
-                <li>Coffee</li>
-                <li>Tea</li>
-                <li>Milk</li>
-            </ul>
+            <div className="break" />
 
-            <p>It's not only writers who can benefit from this free online tool. If you're a programmer who's working on a project where blocks of text are needed, this tool can be a great way to get that. It's a good way to test your programming and that the tool being created is working well.</p>
-            <p>Above are a few examples of how the random paragraph generator can be beneficial. The best way to see if this random paragraph picker will be useful for your intended purposes is to give it a try. Generate a number of paragraphs to see if they are beneficial to your current project.</p>
+			<p>Spoštovani uporabniki spletne strani ExLibra,</p>
+            <p>Zavedamo se pomembnosti zaščite vaših osebnih podatkov in zato vam v nadaljevanju predstavljamo našo politiko zasebnosti.</p>
+
+            <div className="break" />
+
+            <h2>Kaj zbiramo:</h2>
+            <p>Zbiramo naslednje podatke: e-poštni naslov, ime, telefonsko številko in lokacijo. Vsi ti podatki so potrebni za delovanje spletne strani in zagotavljanje storitve izmenjave knjig med uporabniki.</p>
+
+            <h2>Kako uporabljamo vaše podatke:</h2>
+            <p>Vaše podatke uporabljamo izključno za delovanje spletne strani in zagotavljanje storitve izmenjave knjig med uporabniki. Vaši podatki ne bodo posredovani tretjim osebam brez vaše izrecne privolitve.</p>
             
-            <h4>Title3</h4>
+            <h2>Pravica do dostopa, popravka in izbrisa podatkov:</h2>
+            <p>Imate pravico dostopa do svojih osebnih podatkov, ki jih hranimo, ter pravico do popravka ali izbrisa teh podatkov. Če želite izbrisati svoje osebne podatke ali imate kakršnokoli vprašanje glede zasebnosti, se obrnite na naš e-poštni naslov.</p>
 
-            <p>Above are a few examples of how the random paragraph generator can be beneficial. The best way to see if this random paragraph picker will be useful for your intended purposes is to give it a try. Generate a number of paragraphs to see if they are beneficial to your current project.</p>
+            <h2>Izjava o varstvu osebnih podatkov:</h2>
+            <p>Zavedamo se odgovornosti, ki jo imamo glede vaših osebnih podatkov in se trudimo zagotoviti, da so vaši podatki varno hranjeni in zaščiteni.</p>
+            
+            <div className="break" />
+
+            <h2>Kontakt:</h2>
+            <p>Če imate kakršnokoli vprašanje glede naše politike zasebnosti ali uporabe vaših osebnih podatkov, se lahko obrnete na nas preko e-pošte na naslov info@exlibra.si.</p>
 
 		</div>
 	</div>
