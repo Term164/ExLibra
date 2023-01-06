@@ -1,4 +1,4 @@
-import Reac, {useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import { saveUserData } from '../Firebase';
 import tempImg1 from '../images/pfp1.jpg';
 import imageOverlay from '../images/upload-image.png';
@@ -29,12 +29,11 @@ export default function UserProfile(props){
     
 
     const handleSaveUserData = async event => {
+        event.preventDefault();
         try {
-            await saveUserData(name.current.value, surname.current.value, username.current.value, email.current.value, tel.current.value);   
-            //await saveUserData();
+            await saveUserData(name.current.value, surname.current.value, username.current.value, email.current.value, tel.current.value);
             setIsSaved(true);
         } catch (error) {
-            //console.log(error);
             setIsError(true);
         }
     }
