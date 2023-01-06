@@ -28,7 +28,6 @@ export default function PageLogin() {
 
   async function defaultLoginHandler(e){
     e.preventDefault();
-    console.log(email.current.value, password.current.value);
     try {
       setIsLoading(true);
       await signInDefault(email.current.value, password.current.value);
