@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc} from "@firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirebaseConfig } from './firebase-config.js';
 
@@ -90,6 +90,49 @@ async function saveUserData(name, surname, username, tel){
     }, {merge: true});
 }
 
+async function getBooks(){
+    const colRef = collection(firestore, "books");
+    const q = query(colRef)
+    const docsSnap = await getDocs(q);
+    docsSnap.forEach(doc => {
+        //console.log(doc.id + ":");
+        //console.log(doc.data().ime, doc.data().faks, doc.data().predmet);
+    })
+}
+
+
+async function getBook(id) {
+    const colRef = collection(firestore, "books");
+    const q = query(colRef);
+    const docsSnap = await getDocs(q);
+    let book;
+    docsSnap.forEach(doc => {
+      if (id == doc.id) {
+        book = doc;
+        return;
+      }
+    });
+    if (!book) {
+      throw new Error(`Book with ID ${id} not found`);
+    }
+    return book;
+  }
+  
+  async function getOglas() {
+    const colRef = collection(firestore, "oglas");
+    const q = query(colRef);
+    const docsSnap = await getDocs(q);
+    docsSnap.forEach(async function (doc) {
+      try {
+        const bid = doc.data().knjiga.id;
+        const knj = await getBook(bid);
+        console.log(knj.data().ime, knj.data().faks, knj.data().predmet, doc.data().opis, doc.data().cena);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+}
+
 function isUserSignedIn() {
     return !!getAuth().currentUser;
 }
@@ -102,4 +145,4 @@ function getUserName() {
     return getAuth().currentUser.displayName;
 }
 
-export {saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName};
+export {saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getBooks, getOglas};

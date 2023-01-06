@@ -1,8 +1,10 @@
 import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
+import { getBooks, getOglas}  from '../Firebase.js';
 
 export default function PageBooks() {
+	getOglas();
   return (
 	<>
     <div className="content-pb">
