@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Map<String, Object> user = new HashMap<>();
                         user.put("email", email);
                         user.put("password", "");
-                        String username;
+                        String username;    // user types username in the field
                         user.put("username", username = email.split("@")[0]);
 
                         user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
@@ -102,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.e("FAILURE CREATING", "Error while adding user.", e);
                             }
                         });
-
 
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     }else{

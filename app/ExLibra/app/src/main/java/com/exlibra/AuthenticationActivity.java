@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -58,11 +59,11 @@ public class AuthenticationActivity extends AppCompatActivity {
 
 
         //Google
-        gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        gsc= GoogleSignIn.getClient(this,gso);
+        gsc = GoogleSignIn.getClient(this,gso);
 
         google.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,12 +85,15 @@ public class AuthenticationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==100){
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-
+            Log.d("DEBUG", "google: "+task);
             try {
                 task.getResult(ApiException.class);
+
+                Log.e("DEBUG", "res: "+task.getResult(ApiException.class));
+
                 HomeActivity();
             } catch (ApiException e) {
+                Log.e("DEBUG", e.toString() );
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         }
