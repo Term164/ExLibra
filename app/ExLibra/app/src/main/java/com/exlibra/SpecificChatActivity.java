@@ -25,13 +25,17 @@ public class SpecificChatActivity extends AppCompatActivity {
 
     String TAG = "DEBUG";
 
-    static String groupId= "q6aicbbi10cPybosijHQ";
+    static String groupId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_chat);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            groupId = extras.getString("gid");
 
         getChatWithUser(groupId);
 

@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
                         groupIds.add(gid);
                         // get name of the other guy,
                         // and the last message sent, preferably
-                        adapter.add("name");
+                        adapter.add(gid);
                     }
                 }
                 list.setAdapter(adapter);
@@ -105,7 +105,9 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.d(TAG, "CLicked: "+position);
         Log.d(TAG, "GID = "+groupIds.get(position));
         // Create chat Fragment
-        startActivity(new Intent(ChatActivity.this, SpecificChatActivity.class));
+        Intent i = new Intent(ChatActivity.this, SpecificChatActivity.class);
+        i.putExtra("gid", groupIds.get(position));
+        startActivity(i);
 
     }
 }
