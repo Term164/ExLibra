@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/PageSell.css';
 import tempImg1 from '../images/temp-book.jpg';
-import { getBooks}  from '../Firebase.js';
+import { getBooks, addOglas}  from '../Firebase.js';
 
 export default class PageSell extends React.Component {
 
@@ -25,6 +25,8 @@ export default class PageSell extends React.Component {
 	}
 
 	render() {
+
+
 
 		const listBooks = [];
 
@@ -68,15 +70,15 @@ export default class PageSell extends React.Component {
 					</div>
 
 					<div className="line">
-						<textarea placeholder="Opis..."></textarea>
+						<textarea id="opis" placeholder="Opis..."></textarea>
 					</div>
 					
 					<div className="line">
-						<input type="number" name="price" placeholder="Cena..." />
+						<input id="cena" type="number" name="price" placeholder="Cena..." />
 					</div>
 					
 					<div className="line center">
-						<button>Save</button>
+						<button onClick={addOglas}>Save</button>
 					</div>
 
 				</div>

@@ -215,6 +215,25 @@ async function getOglas() {
     }
     return knjList;
 }
+async function addOglas(){
+    let opis = document.getElementById("opis").value;
+    let cena = document.getElementById("cena").value;
+    let bid = document.getElementById("knjiga").value;
+    let user = getUserSignedIn().uid;
+    let knjRef = doc(firestore, 'books/' + bid);
+    const knj = await getBook(bid);
+    
+    const docRef = await addDoc(collection(firestore, "oglas"), {
+        cena: cena,
+        knjiga: knjRef,
+        //lokacija: "neki",
+        opis: opis,
+        prodajalec: '/users/' + user,
+        prodano: false,
+        urlslike: "slika.png"
+      });
+    console.log("oglas dodan");
+}
 
 function isUserSignedIn() {
     return !!getAuth().currentUser;
@@ -296,4 +315,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getPfp, ref, getOglas, getBooks};
+export { getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getPfp, ref, getOglas, getBooks, addOglas};
