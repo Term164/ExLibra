@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../css/PageChat.css';
 import { loadMessages, saveMessage, getListOfAllChats } from '../Firebase';
-import pfp1 from '../images/pfp1.jpg'
 
 export default function PageChat(props) {
 
@@ -27,7 +26,8 @@ export default function PageChat(props) {
 		setMessages((t)=>[...t,message]);
 	}
 
-	const saveUserMessage = () => {
+	const saveUserMessage = (e) => {
+		e.preventDefault();
 		if(message.current.value !== ""){
 			saveMessage(gid, user.username, message.current.value);
 			message.current.value = "";
@@ -84,8 +84,10 @@ export default function PageChat(props) {
 				</div>
 
 				<div className="input">
-					<input ref={message} type="text" name="message" title="message" placeholder="Sporočilo..." />
-					<input onClick={saveUserMessage} type="submit" value="Pošlji" />
+					<form onSubmit={saveUserMessage}>
+						<input ref={message} type="text" name="message" title="message" placeholder="Sporočilo..." />
+						<input type="submit" value="Pošlji"/>
+					</form>
 				</div>
 			</div>
 			<div className="right">
