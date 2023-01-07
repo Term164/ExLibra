@@ -126,12 +126,10 @@ async function getOglas() {
     const docSnapshots = docsSnap.docs;
     for (var i in docSnapshots) {
         const data = docSnapshots[i].data();
-        //console.log(data);
         const bid = data.knjiga.id;
         const knj = await getBook(bid);
         const bData = knj.data();
-        //console.log(bData);
-        knjList.push({id: bid, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
+        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
     }
     return knjList;
 }
