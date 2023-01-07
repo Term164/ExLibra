@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc} from "@firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc, connectFirestoreEmulator} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { ref, getStorage, getDownloadURL } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
@@ -140,14 +140,18 @@ async function saveUserData(name, imeSlike, surname, username, email, tel){
     }, {merge: true});
 }
 
-async function getBooks(){
+async function getBooks() {
     const colRef = collection(firestore, "books");
     const q = query(colRef)
     const docsSnap = await getDocs(q);
-    docsSnap.forEach(doc => {
-        //console.log(doc.id + ":");
-        //console.log(doc.data().ime, doc.data().faks, doc.data().predmet);
-    })
+    const knjList = {};
+    const docSnapshots = docsSnap.docs;
+    for (var i in docSnapshots) {
+        const data = docSnapshots[i].data();
+        const id = docSnapshots[i].id;
+        knjList[id] = {ime: data.ime, faksi: data.faks, predmeti: data.predmet};
+    }
+    return knjList;
 }
 
 
@@ -157,31 +161,31 @@ async function getBook(id) {
     const docsSnap = await getDocs(q);
     let book;
     docsSnap.forEach(doc => {
-      if (id == doc.id) {
-        book = doc;
-        return;
-      }
+        if (id == doc.id) {
+            book = doc;
+            return;
+        }
     });
     if (!book) {
-      throw new Error(`Book with ID ${id} not found`);
+        throw new Error(`Book with ID ${id} not found`);
     }
     return book;
-  }
-  
-  async function getOglas() {
+}
+
+async function getOglas() {
     const colRef = collection(firestore, "oglas");
     const q = query(colRef);
     const docsSnap = await getDocs(q);
-    docsSnap.forEach(async function (doc) {
-      try {
-        const bid = doc.data().knjiga.id;
+    const knjList = [];
+    const docSnapshots = docsSnap.docs;
+    for (var i in docSnapshots) {
+        const data = docSnapshots[i].data();
+        const bid = data.knjiga.id;
         const knj = await getBook(bid);
-        const slika = await getImg(doc.data().urlslike.id);
-        //console.log(knj.data().ime, knj.data().faks, knj.data().predmet, doc.data().opis, doc.data().cena, doc.id, doc.data().urlslike.id);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+        const bData = knj.data();
+        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
+    }
+    return knjList;
 }
 
 function isUserSignedIn() {
