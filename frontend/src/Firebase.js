@@ -77,21 +77,10 @@ async function getImg(id){
 
 async function getPfp1(userRef){
     const userData = await getDoc(userRef);
-    console.log(userData.data().profileurl);
+    //console.log(userData.data().profileurl);
     getDownloadURL(ref(storage, userData.data().profileurl))
     .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-        const blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
-
-        // Or inserted into an <img> element
+        
         const img = document.getElementById('image');
         img.setAttribute('src', url);
     })

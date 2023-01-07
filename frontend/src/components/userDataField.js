@@ -42,13 +42,13 @@ export default function UserProfile(props){
         input = document.getElementById("fileInput");
         
         let imgToUpload = input.files[0];
-        console.log(imgToUpload.type);
+        console.log(imgToUpload.name);
         let koncnica = imgToUpload.type.split("/");
-        console.log(koncnica);
+        //console.log(koncnica);
         const metaData = {
             contentType: imgToUpload.type
         }
-        imeSlike = imgName + "." + koncnica[1];
+        imeSlike = imgToUpload.name;
         
         const storageRef = ref(storage, "pfp/" + imeSlike);
         const uploadTask = uploadBytesResumable(storageRef, imgToUpload, metaData);
@@ -59,8 +59,12 @@ export default function UserProfile(props){
         event.preventDefault();
         try {
             await uploadImg();
+            input = document.getElementById("fileInput");
+        
+            let imeSlike = input.files[0].name;
             console.log(imeSlike);
             const imageRef = ref(storage, 'pfp/' + imeSlike);
+            console.log(imageRef.fullPath);
             await saveUserData(name.current.value, imageRef, surname.current.value, username.current.value, email.current.value, tel.current.value);
             setIsSaved(true);
         } catch (error) {
