@@ -43,7 +43,7 @@ export default function PageChat(props) {
 	function renderUsers(){
 		if(users){
 			return users.map(doc => {
-				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={pfp1} alt="u1" /><h3>{doc.username}</h3></div>
+				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={doc.url} alt="u1" /><h3>{doc.username}</h3></div>
 			});
 		}else{
 			return <></>;

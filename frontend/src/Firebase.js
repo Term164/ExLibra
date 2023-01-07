@@ -128,7 +128,7 @@ async function getListOfAllChats(user){
             otherUserData = await getSpecificUserData(groupData.members[0]);
         }
 
-        allGroupChats.push({username: otherUserData.username, gid: group});
+        allGroupChats.push({username: otherUserData.username, gid: group, url: otherUserData.profileurl});
     }));
 
     return allGroupChats;
