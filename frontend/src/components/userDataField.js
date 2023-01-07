@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import { saveUserData } from '../Firebase';
+import { saveUserData, signOutUser } from '../Firebase';
 import tempImg1 from '../images/pfp1.jpg';
 import imageOverlay from '../images/upload-image.png';
 import {CgCloseR} from 'react-icons/cg';
@@ -37,6 +37,11 @@ export default function UserProfile(props){
             setIsError(true);
         }
     }
+    const handleLogout = () => {
+		signOutUser().then(() => {
+			window.location.href = '/login';
+		})
+	}
 
 
     return(
@@ -76,7 +81,7 @@ export default function UserProfile(props){
                 </div>
             </div>
             <div className="options">
-                <button>Logout</button>
+                <button onClick={handleLogout}>Logout</button>
                 <button onClick={handleSaveUserData}>Save</button>
             </div>
             {isError && errorMessage}
