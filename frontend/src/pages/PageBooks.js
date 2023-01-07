@@ -2,7 +2,6 @@ import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
 import { getOglas}  from '../Firebase.js';
-import imgDefault from '../images/temp-book.jpg';
 
 export default class PageBooks extends React.Component {
 	
@@ -33,9 +32,10 @@ export default class PageBooks extends React.Component {
 		const results = [];
 
 		for(const book of this.state.books) {//book.slika TODO need to use this
+			console.log(book);
 			results.push(
 				<div key={book.id} className="item">
-					<img src={imgDefault} alt={"book-" + book.id} />
+					<img src={book.slika} alt={"book-" + book.id} />
 					<div className="info">
 						<h3>{book.ime}</h3>
 						<h5>{this.arrayToDisplay(book.faksi, '/')}, {this.getYearDisplay(book.time)}, {this.arrayToDisplay(book.predmeti, '/')}</h5>

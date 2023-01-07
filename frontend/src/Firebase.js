@@ -67,6 +67,11 @@ async function saveNewUserData(uid, username, email){
     await setDoc(doc(firestore, `users`, uid), docData);
 }
 
+async function saveAddImage(file){
+    const filePath = `slikaoglasa/${getAuth().currentUser.uid}/${file.name}`;
+    return await saveImage(file, filePath);
+}
+
 
 async function saveProfileImage(file){
     const filePath = `pfp/${getAuth().currentUser.uid}/${file.name}`;
@@ -212,10 +217,7 @@ async function getOglas() {
     }
     return knjList;
 }
-async function addOglas(){
-    let opis = document.getElementById("opis").value;
-    let cena = document.getElementById("cena").value;
-    let bid = document.getElementById("knjiga").value;
+async function addOglas(opis, cena, bid, url){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
     const usrRef = doc(firestore, "users", user);
@@ -227,7 +229,7 @@ async function addOglas(){
         opis: opis,
         prodajalec: '/users/' + user,
         prodano: false,
-        urlslike: "slika.png"
+        urlslike: url
       });
     console.log(docRef.id);
     await updateDoc(usrRef, {
@@ -286,18 +288,25 @@ async function addGroupToUser(uid, gid){
     }
 }
 
-function loadMessages(gid, addNewMessage){
-    if(unsubscribe) unsubscribe();
-
-    const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`), orderBy('sentAt', 'asc'));
-    unsubscribe = onSnapshot(recentMessagesQuery, function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if(change.type === 'added'){
-            let messageData = change.doc.data();
-            messageData.id = change.doc.id;
-            addNewMessage(messageData);
-        }
-      });
+function loadMessages(gid, addNewMessage) {
+    if (unsubscribe) unsubscribe();
+    
+    const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`),orderBy('sentAt', 'asc'));
+  
+    return new Promise((resolve) => {
+        unsubscribe = onSnapshot(recentMessagesQuery, function (snapshot) {
+            const changes = snapshot.docChanges();
+            for (let i = 0; i < changes.length; i++) {
+                const change = changes[i];
+                //console.log(change.doc.data());
+                if (change.type === 'removed') {
+                    //deleteMessage(change.doc.id);
+                } else if (change.type === 'added') {
+                    addNewMessage(change.doc.data());
+                }
+            }
+            resolve();
+        });
     });
 }
 
@@ -314,4 +323,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
+export { saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
