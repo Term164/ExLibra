@@ -279,11 +279,10 @@ function loadMessages(gid, addNewMessage) {
             const changes = snapshot.docChanges();
             for (let i = 0; i < changes.length; i++) {
                 const change = changes[i];
-                //console.log(change.doc.data());
-                if (change.type === 'removed') {
-                    //deleteMessage(change.doc.id);
-                } else if (change.type === 'added') {
-                    addNewMessage(change.doc.data());
+                if (change.type === 'added') {
+                    let messageData = change.doc.data();
+                    messageData.id = change.doc.id;
+                    addNewMessage(messageData);
                 }
             }
             resolve();
