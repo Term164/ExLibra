@@ -32,7 +32,7 @@ class App extends React.Component {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<PageBooks userData = {this.state.user}/>} />
-          <Route path="/chat" element={<PageChat />} />
+          <Route path="/chat" element={<PageChat userData = {this.state.user}/>} />
           <Route path="/profile" element={<PageProfile userData = {this.state.user}/>} />
           <Route path="/sell" element={<PageSell />} />
           <Route path="/login" element={<PageLogin />} />

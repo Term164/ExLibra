@@ -9,7 +9,6 @@ export default class PageProfile extends React.Component {
 			<div className="content-pp">
 				<UserProfile userData = {user}/>
 				<div className="books">
-					
 					<div className="wishlist-section section">
 						<h2>Seznam želja</h2>
 						<div className="book-area">

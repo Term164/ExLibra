@@ -1,98 +1,105 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../css/PageChat.css';
+import { loadMessages, saveMessage, getListOfAllChats } from '../Firebase';
+import pfp1 from '../images/pfp1.jpg'
 
-export default function PageChat() {
-  return (
-    <div className="content-pc">
-		<div className="left">
+export default function PageChat(props) {
 
-			<div className="container">
-				<div  id="scroll-area">
-				
-					<div id="messages">
+	const [users, setUsers] = useState([]);
+	const [messages, setMessages] = useState([]);
+	const [gid, setGid] = useState(null);
+	const message = useRef();
 
-						<div className="message">
-							<div className="label">
-								<h4>Alan</h4>
-								<h5>22/11/20 18:36</h5>
-							</div>
-							<p>What are you doing?</p>
-						</div>
+	let user = props.userData;
 
-						<div className="message me">
-							<div className="label">
-								<h4>Jaz</h4>
-								<h5>22/11/20 19:01</h5>
-							</div>
-							<p>Nothing much?</p>
-						</div>
+	useEffect(() =>{
+		async function getData(){
+			if(user){
+				const array = await getListOfAllChats(user);
+				setUsers(array);
+			}
+		}
+		getData();
 
-						<div className="message">
-							<div className="label">
-								<h4>Alan</h4>
-								<h5>22/11/20 19:53</h5>
-							</div>
-							<p>I'm not doing anything really.</p>
-						</div>
+	},[user]);
 
-						<div className="message">
-							<div className="label">
-								<h4>Alan</h4>
-								<h5>22/11/20 19:55</h5>
-							</div>
-							<p>Please stop messaging me!</p>
-						</div>
+	const addNewMessage= (message) =>{
+		setMessages((t)=>[...t,message]);
+	}
 
-						<div className="message me">
-							<div className="label">
-								<h4>Jaz</h4>
-								<h5>22/11/20 20:00</h5>
-							</div>
-							<p>NO!</p>
+	const saveUserMessage = () => {
+		if(message.current.value !== ""){
+			saveMessage(gid, user.username, message.current.value);
+			message.current.value = "";
+		}
+	}
+
+	function loadMessagesAndListenToChanges(gid){
+		setMessages([]);
+		setGid(gid);
+		loadMessages(gid, addNewMessage);
+	}
+
+	function renderUsers(){
+		if(users){
+			return users.map(doc => {
+				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={pfp1} alt="u1" /><h3>{doc.username}</h3></div>
+			});
+		}else{
+			return <></>;
+		}
+	}
+
+
+	return (
+		<div className="content-pc">
+			<div className="left">
+				<div className="container">
+					<div  id="scroll-area">
+						<div id="messages">
+						{
+							messages.map(msg =>{
+								const me = msg.sentBy === user.username ? "me" : "";
+								const classes = `message ${me}`;
+								const extract = date => date.toISOString().split(/[^0-9]/).slice(0, -1);
+								const date = extract( msg.sentAt ? new Date(msg.sentAt.seconds * 1000) : new Date(Date.now()));
+								
+								return <div key={msg.sentAt} className={classes}>
+											<div className="label">
+												<h4>{msg.sentBy === user.username ? "Jaz" : msg.sentBy}</h4>
+												<h5>{`${date[0]}/${date[1]}/${date[2]} ${date[3]}:${date[4]}`}</h5>
+											</div>
+											<p>{msg.messageText}</p>
+										</div>
+							})
+						}
 						</div>
 
 					</div>
 
+					<div id="scrollbar">
+						<div id="bar-handle"></div>
+					</div>
+
 				</div>
 
-				<div id="scrollbar">
-					<div id="bar-handle"></div>
+				<div className="input">
+					<input ref={message} type="text" name="message" title="message" placeholder="Sporočilo..." />
+					<input onClick={saveUserMessage} type="submit" value="Pošlji" />
 				</div>
-
 			</div>
+			<div className="right">
+				<h2>Uporabniki:</h2>
 
-			<div className="input">
-				<input type="text" name="message" title="message" placeholder="Sporočilo..." />
-				<input type="submit" value="Pošlji" />
+				<div id="users-display">
+
+					<div id="users">
+						{renderUsers()}
+					</div>
+
+				</div>
+
 			</div>
 		</div>
-		<div className="right">
-			<h2>Uporabniki:</h2>
-
-			<div id="users-display">
-
-				<div id="users">
-
-					<div className="user">
-						<img src="images/pfp1.jpg" alt="u1" />
-						<h3>Alan</h3>
-					</div>
-					
-					<div className="user">
-						<img src="images/pfp2.png" alt="u1" />
-						<h3>Janez</h3>
-					</div>
-					
-					<div className="user">
-						<img src="images/pfp3.jpg" alt="u1" />
-						<h3>Riko</h3>
-					</div>
-
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-  )
+	)
 }
