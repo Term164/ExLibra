@@ -1,10 +1,16 @@
 import React, { useRef } from 'react';
 import '../css/PageProfile.css';
 import UserProfile from '../components/userDataField';
+import { loadImage}  from '../Firebase.js';
 
 export default class PageProfile extends React.Component {
+
 	render(){
 		let user = this.props.userData;
+		function navigateSell(){
+			window.location.href = "/sell";
+		}
+				
 		return (
 			<div className="content-pp">
 				<UserProfile userData = {user}/>
@@ -188,7 +194,7 @@ export default class PageProfile extends React.Component {
 						</div>
 		
 						<div className="options">
-							<button>Dodaj</button>
+							<button onClick={navigateSell}>Dodaj</button>
 							<button>Odstrani</button>
 						</div>
 		
