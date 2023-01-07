@@ -6,8 +6,12 @@ import imgDefault from '../images/temp-book.jpg';
 
 export default class PageBooks extends React.Component {
 	
-	state = {
-		books: []
+	constructor(props) {
+		super(props);
+		this.state = {
+		  books: []
+		};
+		this.componentDidMount = this.componentDidMount.bind(this);
 	}
 	
 	async componentDidMount() {
@@ -54,7 +58,7 @@ export default class PageBooks extends React.Component {
 					<div className="filters">
 						<div className="filter">
 							<h3>Razvrsti po:</h3>
-							<select name="order" id="order" title="order">
+							<select onChange={this.componentDidMount} name="order" id="order" title="order">
 								<option value="costLow">Cena naraščajoča</option>
 								<option value="costHigh">Cena padajoča</option>
 								<option value="new">Novo</option>
@@ -64,7 +68,7 @@ export default class PageBooks extends React.Component {
 
 						<div className="filter">
 							<h3>Cena:</h3>
-							<input type="range" name="cost" />
+							<input onChange={getOglas} id="maxPrice" type="range" name="cost" />
 						</div>
 						
 						<div className="filter">
