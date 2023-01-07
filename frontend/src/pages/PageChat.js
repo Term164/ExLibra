@@ -64,7 +64,7 @@ export default function PageChat(props) {
 								const extract = date => date.toISOString().split(/[^0-9]/).slice(0, -1);
 								const date = extract( msg.sentAt ? new Date(msg.sentAt.seconds * 1000) : new Date(Date.now()));
 								
-								return <div key={msg.sentAt} className={classes}>
+								return <div key={msg.id} className={classes}>
 											<div className="label">
 												<h4>{msg.sentBy === user.username ? "Jaz" : msg.sentBy}</h4>
 												<h5>{`${date[0]}/${date[1]}/${date[2]} ${date[3]}:${date[4]}`}</h5>

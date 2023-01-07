@@ -251,11 +251,10 @@ function loadMessages(gid, addNewMessage){
     const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`), orderBy('sentAt', 'asc'));
     unsubscribe = onSnapshot(recentMessagesQuery, function(snapshot) {
       snapshot.docChanges().forEach(function(change) {
-        //console.log(change.doc.data());
-        if(change.type === 'removed'){
-          //deleteMessage(change.doc.id);
-        }else if(change.type === 'added'){
-            addNewMessage(change.doc.data());
+        if(change.type === 'added'){
+            let messageData = change.doc.data();
+            messageData.id = change.doc.id;
+            addNewMessage(messageData);
         }
       });
     });
