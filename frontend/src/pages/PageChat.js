@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../css/PageChat.css';
 import { loadMessages, saveMessage, getListOfAllChats } from '../Firebase';
-import pfp1 from '../images/pfp1.jpg'
 
 export default function PageChat(props) {
 
@@ -27,7 +26,8 @@ export default function PageChat(props) {
 		setMessages((t)=>[...t,message]);
 	}
 
-	const saveUserMessage = () => {
+	const saveUserMessage = (e) => {
+		e.preventDefault();
 		if(message.current.value !== ""){
 			saveMessage(gid, user.username, message.current.value);
 			message.current.value = "";
@@ -43,7 +43,7 @@ export default function PageChat(props) {
 	function renderUsers(){
 		if(users){
 			return users.map(doc => {
-				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={pfp1} alt="u1" /><h3>{doc.username}</h3></div>
+				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={doc.url} alt="u1" /><h3>{doc.username}</h3></div>
 			});
 		}else{
 			return <></>;
@@ -64,7 +64,7 @@ export default function PageChat(props) {
 								const extract = date => date.toISOString().split(/[^0-9]/).slice(0, -1);
 								const date = extract( msg.sentAt ? new Date(msg.sentAt.seconds * 1000) : new Date(Date.now()));
 								
-								return <div key={msg.sentAt} className={classes}>
+								return <div key={msg.id} className={classes}>
 											<div className="label">
 												<h4>{msg.sentBy === user.username ? "Jaz" : msg.sentBy}</h4>
 												<h5>{`${date[0]}/${date[1]}/${date[2]} ${date[3]}:${date[4]}`}</h5>
@@ -84,8 +84,10 @@ export default function PageChat(props) {
 				</div>
 
 				<div className="input">
-					<input ref={message} type="text" name="message" title="message" placeholder="Sporočilo..." />
-					<input onClick={saveUserMessage} type="submit" value="Pošlji" />
+					<form onSubmit={saveUserMessage}>
+						<input ref={message} type="text" name="message" title="message" placeholder="Sporočilo..." />
+						<input type="submit" value="Pošlji"/>
+					</form>
 				</div>
 			</div>
 			<div className="right">

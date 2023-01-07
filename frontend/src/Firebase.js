@@ -1,13 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc} from "@firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { ref, getStorage, getDownloadURL } from "firebase/storage";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { ref, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
 
 const firebaseConfig = getFirebaseConfig();
 initializeApp(firebaseConfig);
 const firestore = getFirestore();
-const storage = getStorage();
 let unsubscribe;
 
 
@@ -61,7 +60,7 @@ async function saveNewUserData(uid, username, email){
         name: "",
         surname: "",
         tel: "",
-        profileurl: "/pfp/default.png",
+        profileurl: "https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4",
         ads: [],
         wishlist: [],
     }
@@ -69,37 +68,16 @@ async function saveNewUserData(uid, username, email){
 }
 
 
-async function getImg(id){
-    const imgRef = ref(storage, 'slikaoglasa/' + id);
-    console.log(imgRef);
-    
+async function saveProfileImage(file){
+    const filePath = `pfp/${getAuth().currentUser.uid}/${file.name}`;
+    return await saveImage(file, filePath);
 }
 
-async function getPfp1(userRef){
-    const userData = await getDoc(userRef);
-    //console.log(userData.data().profileurl);
-    getDownloadURL(ref(storage, userData.data().profileurl))
-    .then((url) => {
-        
-        const img = document.getElementById('image');
-        img.setAttribute('src', url);
-    })
-    .catch((error) => {
-        // Handle any errors
-    });
-}
-
-function getPfp(){
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const pfpImg = user;
-        let userRef = doc(firestore, "users", user.uid);
-        getPfp1(userRef);
-        // ...
-    } else {
-    }
-    });
+async function saveImage(file, filePath){
+    const newImageRef = ref(getStorage(), filePath);
+    await uploadBytesResumable(newImageRef, file);
+    const publicImageUrl = await getDownloadURL(newImageRef);
+    return publicImageUrl;
 }
 
 
@@ -150,7 +128,7 @@ async function getListOfAllChats(user){
             otherUserData = await getSpecificUserData(groupData.members[0]);
         }
 
-        allGroupChats.push({username: otherUserData.username, gid: group});
+        allGroupChats.push({username: otherUserData.username, gid: group, url: otherUserData.profileurl});
     }));
 
     return allGroupChats;
@@ -161,7 +139,7 @@ async function saveUserData(name, imeSlike, surname, username, email, tel){
     console.log(imeSlike.fullPath);
     await setDoc(documentReference, {
        name: name,
-       profileurl: imeSlike.fullPath,
+       profileurl: imeSlike,
        surname: surname,
        username: username,
        tel: tel
@@ -189,7 +167,7 @@ async function getBook(id) {
     const docsSnap = await getDocs(q);
     let book;
     docsSnap.forEach(doc => {
-        if (id == doc.id) {
+        if (id === doc.id) {
             book = doc;
             return;
         }
@@ -292,11 +270,10 @@ function loadMessages(gid, addNewMessage){
     const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`), orderBy('sentAt', 'asc'));
     unsubscribe = onSnapshot(recentMessagesQuery, function(snapshot) {
       snapshot.docChanges().forEach(function(change) {
-        //console.log(change.doc.data());
-        if(change.type === 'removed'){
-          //deleteMessage(change.doc.id);
-        }else if(change.type === 'added'){
-            addNewMessage(change.doc.data());
+        if(change.type === 'added'){
+            let messageData = change.doc.data();
+            messageData.id = change.doc.id;
+            addNewMessage(messageData);
         }
       });
     });
@@ -315,4 +292,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getPfp, ref, getOglas, getBooks, addOglas};
+export { saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
