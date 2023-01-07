@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc} from "@firebase/firestore";
+import { orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ref, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
@@ -200,6 +200,7 @@ async function addOglas(){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
     const knj = await getBook(bid);
+    const usrRef = doc(firestore, "users", user);
     
     const docRef = await addDoc(collection(firestore, "oglas"), {
         cena: cena,
@@ -210,7 +211,10 @@ async function addOglas(){
         prodano: false,
         urlslike: "slika.png"
       });
-    console.log("oglas dodan");
+    console.log(docRef.id);
+    await updateDoc(usrRef, {
+        ads: arrayUnion(docRef.id)
+    });
 }
 
 function isUserSignedIn() {
