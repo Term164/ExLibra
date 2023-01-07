@@ -107,30 +107,33 @@ async function getBook(id) {
     const docsSnap = await getDocs(q);
     let book;
     docsSnap.forEach(doc => {
-      if (id == doc.id) {
-        book = doc;
-        return;
-      }
+        if (id == doc.id) {
+            book = doc;
+            return;
+        }
     });
     if (!book) {
-      throw new Error(`Book with ID ${id} not found`);
+        throw new Error(`Book with ID ${id} not found`);
     }
     return book;
-  }
-  
-  async function getOglas() {
+}
+
+async function getOglas() {
     const colRef = collection(firestore, "oglas");
     const q = query(colRef);
     const docsSnap = await getDocs(q);
-    docsSnap.forEach(async function (doc) {
-      try {
-        const bid = doc.data().knjiga.id;
+    const knjList = [];
+    const docSnapshots = docsSnap.docs;
+    for (var i in docSnapshots) {
+        const data = docSnapshots[i].data();
+        //console.log(data);
+        const bid = data.knjiga.id;
         const knj = await getBook(bid);
-        console.log(knj.data().ime, knj.data().faks, knj.data().predmet, doc.data().opis, doc.data().cena);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+        const bData = knj.data();
+        //console.log(bData);
+        knjList.push({id: bid, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
+    }
+    return knjList;
 }
 
 function isUserSignedIn() {
