@@ -184,9 +184,28 @@ async function getBook(id) {
 }
 
 async function getOglas() {
-    const colRef = collection(firestore, "oglas");
-    const q = query(colRef);
-    const docsSnap = await getDocs(q);
+    const order = document.getElementById("order").value;
+    const price = document.getElementById("maxPrice").value;
+    console.log(price);
+    let colRef = collection(firestore, "oglas");
+
+    switch (order) {
+        case "costLow":
+            colRef = query(colRef, orderBy("cena"));
+            break;
+          
+        case "costHigh":
+            colRef = query(colRef, orderBy("cena", "desc"));
+            console.log("kaj");
+            break;
+        
+        
+    }
+
+    
+    //const q = query(colRef);
+    const docsSnap = await getDocs(colRef);
+    console.log("hmmm");
     const knjList = [];
     const docSnapshots = docsSnap.docs;
     for (var i in docSnapshots) {
@@ -204,7 +223,7 @@ async function addOglas(opis, cena, bid, url){
     const usrRef = doc(firestore, "users", user);
     
     const docRef = await addDoc(collection(firestore, "oglas"), {
-        cena: cena,
+        cena: Number(cena),
         knjiga: knjRef,
         //lokacija: "neki",
         opis: opis,
