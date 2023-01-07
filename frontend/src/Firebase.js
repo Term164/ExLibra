@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { query, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc, connectFirestoreEmulator, getDocs, collection, addDoc} from "@firebase/firestore";
+import { orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { ref, getStorage, getDownloadURL } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
@@ -70,7 +70,6 @@ async function saveNewUserData(uid, username, email){
 
 
 async function getImg(id){
-
     const imgRef = ref(storage, 'slikaoglasa/' + id);
     console.log(imgRef);
     
@@ -133,39 +132,6 @@ async function getSpecificUserData(uid){
     } 
 }
 
-
-async function getListOfAllChats(user){
-    
-    const allGroupChats = [];
-    const currentUserId = await getAuth().currentUser.uid;
-
-    await Promise.all(user.groups.map(async (group) =>{
-        const groupData = await getGroupData(group);
-        let otherUserData;
-        if(groupData.members[0] === currentUserId){
-            otherUserData = await getSpecificUserData(groupData.members[1]);
-        }else{
-            otherUserData = await getSpecificUserData(groupData.members[0]);
-        }
-
-        allGroupChats.push({username: otherUserData.username, gid: group});
-    }));
-
-    // user.groups.forEach(async group =>{
-    //     const groupData = await getGroupData(group);
-    //     let otherUserData;
-    //     if(groupData.members[0] == currentUserId){
-    //         otherUserData = await getSpecificUserData(groupData.members[1]);
-    //     }else{
-    //         otherUserData = await getSpecificUserData(groupData.members[0]);
-    //     }
-
-    //     allGroupChats.push({username: otherUserData.username, gid: group});
-    // });
-
-    return allGroupChats;
-}
-
 async function getGroupData(gid){
     const groupReference = doc(firestore, "group", gid);
     try{
@@ -198,34 +164,7 @@ async function getListOfAllChats(user){
         allGroupChats.push({username: otherUserData.username, gid: group});
     }));
 
-    // user.groups.forEach(async group =>{
-    //     const groupData = await getGroupData(group);
-    //     let otherUserData;
-    //     if(groupData.members[0] == currentUserId){
-    //         otherUserData = await getSpecificUserData(groupData.members[1]);
-    //     }else{
-    //         otherUserData = await getSpecificUserData(groupData.members[0]);
-    //     }
-
-    //     allGroupChats.push({username: otherUserData.username, gid: group});
-    // });
-
     return allGroupChats;
-}
-
-async function getGroupData(gid){
-    const groupReference = doc(firestore, "group", gid);
-    try{
-        const document = await getDoc(groupReference);
-        if(document.exists()){
-            //console.log("Document data:", document.data());
-            return document.data();
-        }else{
-            console.log("No such document!");
-        }
-    }   catch (e){
-        console.error("Error getting user data: ", e);
-    }
 }
 
 async function saveUserData(name, imeSlike, surname, username, email, tel){
@@ -368,4 +307,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName};
+export { getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getPfp, ref, getOglas, getBooks};

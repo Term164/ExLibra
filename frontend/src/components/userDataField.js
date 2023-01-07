@@ -1,10 +1,9 @@
 import React, {useRef, useState} from 'react'
-import { saveUserData, signOutUser, ref, getPfp, getAuth } from '../Firebase';
-import tempImg1 from '../images/pfp1.jpg';
+import { saveUserData, signOutUser, ref, getPfp } from '../Firebase';
 import imageOverlay from '../images/upload-image.png';
 import {CgCloseR} from 'react-icons/cg';
 import { getStorage, uploadBytesResumable } from 'firebase/storage';
-import { getApps } from 'firebase/app';
+
 
 export default function UserProfile(props){
 

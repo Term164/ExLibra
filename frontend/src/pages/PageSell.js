@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/PageSell.css';
 import tempImg1 from '../images/temp-book.jpg';
-import { getBooks, getOglas}  from '../Firebase.js';
+import { getBooks}  from '../Firebase.js';
 
 export default class PageSell extends React.Component {
 

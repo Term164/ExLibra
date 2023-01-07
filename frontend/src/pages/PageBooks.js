@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
-import { getBooks, getOglas}  from '../Firebase.js';
+import { getOglas}  from '../Firebase.js';
 import imgDefault from '../images/temp-book.jpg';
 
 export default class PageBooks extends React.Component {

@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import '../css/PageProfile.css';
 import UserProfile from '../components/userDataField';
-import { loadImage}  from '../Firebase.js';
 
 export default class PageProfile extends React.Component {
 
