@@ -269,18 +269,25 @@ async function addGroupToUser(uid, gid){
     }
 }
 
-function loadMessages(gid, addNewMessage){
-    if(unsubscribe) unsubscribe();
-
-    const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`), orderBy('sentAt', 'asc'));
-    unsubscribe = onSnapshot(recentMessagesQuery, function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if(change.type === 'added'){
-            let messageData = change.doc.data();
-            messageData.id = change.doc.id;
-            addNewMessage(messageData);
-        }
-      });
+function loadMessages(gid, addNewMessage) {
+    if (unsubscribe) unsubscribe();
+    
+    const recentMessagesQuery = query(collection(getFirestore(), `group/${gid}/messages`),orderBy('sentAt', 'asc'));
+  
+    return new Promise((resolve) => {
+        unsubscribe = onSnapshot(recentMessagesQuery, function (snapshot) {
+            const changes = snapshot.docChanges();
+            for (let i = 0; i < changes.length; i++) {
+                const change = changes[i];
+                //console.log(change.doc.data());
+                if (change.type === 'removed') {
+                    //deleteMessage(change.doc.id);
+                } else if (change.type === 'added') {
+                    addNewMessage(change.doc.data());
+                }
+            }
+            resolve();
+        });
     });
 }
 
