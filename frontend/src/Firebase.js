@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc} from "@firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc, connectFirestoreEmulator} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirebaseConfig } from './firebase-config.js';
 
@@ -90,14 +90,18 @@ async function saveUserData(name, surname, username, email, tel){
     }, {merge: true});
 }
 
-async function getBooks(){
+async function getBooks() {
     const colRef = collection(firestore, "books");
     const q = query(colRef)
     const docsSnap = await getDocs(q);
-    docsSnap.forEach(doc => {
-        //console.log(doc.id + ":");
-        //console.log(doc.data().ime, doc.data().faks, doc.data().predmet);
-    })
+    const knjList = {};
+    const docSnapshots = docsSnap.docs;
+    for (var i in docSnapshots) {
+        const data = docSnapshots[i].data();
+        const id = docSnapshots[i].id;
+        knjList[id] = {ime: data.ime, faksi: data.faks, predmeti: data.predmet};
+    }
+    return knjList;
 }
 
 
