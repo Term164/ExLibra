@@ -1,16 +1,28 @@
 import React, {useRef, useState} from 'react'
-import { saveUserData, signOutUser } from '../Firebase';
+import { saveUserData, signOutUser, ref, getPfp, getAuth } from '../Firebase';
 import tempImg1 from '../images/pfp1.jpg';
 import imageOverlay from '../images/upload-image.png';
 import {CgCloseR} from 'react-icons/cg';
+import { getStorage, uploadBytesResumable } from 'firebase/storage';
+import { getApps } from 'firebase/app';
 
 export default function UserProfile(props){
 
 
     const [isSaved , setIsSaved] = useState(false);
     const [isError, setIsError] = useState(false);
-
-    let user = props.userData;
+    const storage = getStorage();
+    
+    window.onload=function(){
+        getPfp();
+        myimg = document.getElementById("image");
+        input = document.getElementById("fileInput");
+        
+        input.addEventListener('change', handleSelected);
+        
+        
+    }
+    
 
     const handleNotificationClick = event =>{
         setIsError(false);
@@ -26,12 +38,31 @@ export default function UserProfile(props){
     const email = useRef();
     const tel = useRef();
 
-    
+    async function uploadImg(){
+        
+        input = document.getElementById("fileInput");
+        
+        let imgToUpload = input.files[0];
+        console.log(imgToUpload.type);
+        let koncnica = imgToUpload.type.split("/");
+        console.log(koncnica);
+        const metaData = {
+            contentType: imgToUpload.type
+        }
+        imeSlike = imgName + "." + koncnica[1];
+        
+        const storageRef = ref(storage, "pfp/" + imeSlike);
+        const uploadTask = uploadBytesResumable(storageRef, imgToUpload, metaData);
+        
+    }
 
     const handleSaveUserData = async event => {
         event.preventDefault();
         try {
-            await saveUserData(name.current.value, surname.current.value, username.current.value, email.current.value, tel.current.value);
+            await uploadImg();
+            console.log(imeSlike);
+            const imageRef = ref(storage, 'pfp/' + imeSlike);
+            await saveUserData(name.current.value, imageRef, surname.current.value, username.current.value, email.current.value, tel.current.value);
             setIsSaved(true);
         } catch (error) {
             setIsError(true);
@@ -44,12 +75,43 @@ export default function UserProfile(props){
 	}
 
 
+    //select image for pfp
+    function handleEvent(event) {
+        if (event.type === "load") {
+            myimg.src = reader.result;
+        }
+    }
+    
+    function addListeners(reader) {
+        reader.addEventListener('loadstart', handleEvent);
+        reader.addEventListener('load', handleEvent);
+        reader.addEventListener('loadend', handleEvent);
+        reader.addEventListener('progress', handleEvent);
+        reader.addEventListener('error', handleEvent);
+        reader.addEventListener('abort', handleEvent);
+    }
+    
+    function handleSelected(e) {      
+        const selectedFile = input.files[0];
+        if (selectedFile) {
+            addListeners(reader);
+            imgName = selectedFile.name;
+            reader.readAsDataURL(selectedFile);
+        }
+    }
+    
+    let user = props.userData;
+    let imgName;
+    var myimg;
+    var input;
+    var reader = new FileReader();
+    let imeSlike;
     return(
         <div className="profile">
             <div className="profile-image">
-                <img src={tempImg1} alt="Pfp-1" />
+                <img id="image" alt="Pfp-1" />
                 <img className="overlay" src={imageOverlay} alt="overlay" />
-                <input type="file" accept=".png,.jpg,.jpeg" name="profile" />
+                <input type="file"  id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
             </div>
             <div className="profile-info">
                 <div className="line">

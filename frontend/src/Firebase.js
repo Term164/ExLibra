@@ -1,11 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, limit, addDoc, deleteDoc, updateDoc} from "@firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { ref, getStorage, getDownloadURL } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
 
 const firebaseConfig = getFirebaseConfig();
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore();
+const storage = getStorage();
 
 
 async function signInWithGoogle(){
@@ -65,12 +67,58 @@ async function saveNewUserData(uid, username, email){
     await setDoc(doc(firestore, `users`, uid), docData);
 }
 
+
+async function getImg(id){
+
+    const imgRef = ref(storage, 'slikaoglasa/' + id);
+    console.log(imgRef);
+    
+}
+
+async function getPfp1(userRef){
+    const userData = await getDoc(userRef);
+    console.log(userData.data().profileurl);
+    getDownloadURL(ref(storage, userData.data().profileurl))
+    .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+        const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+
+        // Or inserted into an <img> element
+        const img = document.getElementById('image');
+        img.setAttribute('src', url);
+    })
+    .catch((error) => {
+        // Handle any errors
+    });
+}
+
+function getPfp(){
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const pfpImg = user;
+        let userRef = doc(firestore, "users", user.uid);
+        getPfp1(userRef);
+        // ...
+    } else {
+    }
+    });
+}
+
+
 async function getUserData() {
     const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
     try{
         const document = await getDoc(documentReference);
         if(document.exists()){
-            //console.log("Document data:", document.data());
             return document.data();
         }else{
             console.log("No such document!");
@@ -80,10 +128,12 @@ async function getUserData() {
     } 
 }
 
-async function saveUserData(name, surname, username, email, tel){
+async function saveUserData(name, imeSlike, surname, username, email, tel){
     const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
+    console.log(imeSlike.fullPath);
     await setDoc(documentReference, {
        name: name,
+       profileurl: imeSlike.fullPath,
        surname: surname,
        username: username,
        tel: tel
@@ -126,7 +176,8 @@ async function getBook(id) {
       try {
         const bid = doc.data().knjiga.id;
         const knj = await getBook(bid);
-        console.log(knj.data().ime, knj.data().faks, knj.data().predmet, doc.data().opis, doc.data().cena);
+        const slika = await getImg(doc.data().urlslike.id);
+        //console.log(knj.data().ime, knj.data().faks, knj.data().predmet, doc.data().opis, doc.data().cena, doc.id, doc.data().urlslike.id);
       } catch (error) {
         console.error(error);
       }
@@ -145,4 +196,4 @@ function getUserName() {
     return getAuth().currentUser.displayName;
 }
 
-export {saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getBooks, getOglas};
+export {saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getBooks, getOglas, ref, getPfp};
