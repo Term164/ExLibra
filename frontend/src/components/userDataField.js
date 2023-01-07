@@ -29,7 +29,6 @@ export default function UserProfile(props){
     let input;
     let reader = new FileReader();
 
-    // ================== CHANGE ====================
     async function uploadImg(){
         input = document.getElementById("fileInput");
         let imgToUpload = input.files[0];
@@ -80,7 +79,7 @@ export default function UserProfile(props){
             <div className="profile-image">
                 <img id="image" src={user ? user.profileurl : 'https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4'} alt="Pfp-1" />
                 <img className="overlay" src={imageOverlay} alt="overlay" />
-                <input type="file"  id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
+                <input type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
             </div>
             <div className="profile-info">
                 <div className="line">

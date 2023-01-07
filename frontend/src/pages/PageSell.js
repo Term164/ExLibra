@@ -1,9 +1,16 @@
 import React from 'react';
 import '../css/PageSell.css';
 import tempImg1 from '../images/temp-book.jpg';
-import { getBooks, addOglas}  from '../Firebase.js';
+import { getBooks, addOglas, saveAddImage}  from '../Firebase.js';
 
 export default class PageSell extends React.Component {
+
+	constructor(props){
+		super(props)
+		this.desc = React.createRef();
+		this.price = React.createRef();
+		this.bid = React.createRef();
+	}
 
 	state = {
 		books: {},
@@ -26,9 +33,27 @@ export default class PageSell extends React.Component {
 
 	render() {
 
-
-
+		let myimg;
+    	let input;
+		let reader = new FileReader();
 		const listBooks = [];
+
+		async function uploadImg(){
+			input = document.getElementById("fileInput");
+			let imgToUpload = input.files[0];
+			let url = await saveAddImage(imgToUpload);
+			return url;
+		}
+
+		const saveAdd = async event => {
+			event.preventDefault();
+			try {
+				let imageUrl = await uploadImg();
+				await addOglas(this.desc.current.value, this.price.current.value, this.bid.current.value, imageUrl);
+			} catch (error) {
+				console.error(error);
+			}
+		}
 
 		for (const bookId in this.state.books) {
 			const bookData = this.state.books[bookId];
@@ -45,17 +70,38 @@ export default class PageSell extends React.Component {
 			selectedBookSubs = this.arrayToDisplay(selectedBook.predmeti, ',');
 		}
 
+		window.onload=function(){
+			// Get html element references
+			myimg = document.getElementById("image");
+			input = document.getElementById("fileInput");
+			// Add event listeners
+			input.addEventListener('change', handleSelected);
+			reader.addEventListener('load', handleEvent);
+		}
+
+		//select image for pfp
+		function handleEvent(event) {
+			myimg.src = reader.result;
+		}
+		
+		function handleSelected(e) {      
+			const selectedFile = input.files[0];
+			if (selectedFile) {
+				reader.readAsDataURL(selectedFile);
+			}
+		}
+
 		return (
 			<div className="content-ps">
 				<div className="left">
 					<div className="book-image">
-						<img src={tempImg1} alt="sell" />
-						<input type="file" accept=".png,.jpg,.jpeg" name="profile" />
+						<img id='image' src={tempImg1} alt="sell" />
+						<input type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
 					</div>
 				</div>
 				<div className="right">
 					<div className="line">
-						<select name="knjiga" id="knjiga" title="Knjiga" onChange={this.handleChangeBook} >
+						<select name="knjiga" ref={this.bid}  id="knjiga" title="Knjiga" onChange={this.handleChangeBook} >
 							<option value="none">Izberi</option>
 							{listBooks}
 						</select>
@@ -70,15 +116,15 @@ export default class PageSell extends React.Component {
 					</div>
 
 					<div className="line">
-						<textarea id="opis" placeholder="Opis..."></textarea>
+						<textarea id="opis" ref={this.desc} placeholder="Opis..."></textarea>
 					</div>
 					
 					<div className="line">
-						<input id="cena" type="number" name="price" placeholder="Cena..." />
+						<input id="cena" ref={this.price} type="number" name="price" placeholder="Cena..." />
 					</div>
 					
 					<div className="line center">
-						<button onClick={addOglas}>Save</button>
+						<button onClick={saveAdd}>Save</button>
 					</div>
 
 				</div>

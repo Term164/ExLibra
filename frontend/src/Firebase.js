@@ -67,6 +67,11 @@ async function saveNewUserData(uid, username, email){
     await setDoc(doc(firestore, `users`, uid), docData);
 }
 
+async function saveAddImage(file){
+    const filePath = `slikaoglasa/${getAuth().currentUser.uid}/${file.name}`;
+    return await saveImage(file, filePath);
+}
+
 
 async function saveProfileImage(file){
     const filePath = `pfp/${getAuth().currentUser.uid}/${file.name}`;
@@ -193,13 +198,9 @@ async function getOglas() {
     }
     return knjList;
 }
-async function addOglas(){
-    let opis = document.getElementById("opis").value;
-    let cena = document.getElementById("cena").value;
-    let bid = document.getElementById("knjiga").value;
+async function addOglas(opis, cena, bid, url){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
-    const knj = await getBook(bid);
     const usrRef = doc(firestore, "users", user);
     
     const docRef = await addDoc(collection(firestore, "oglas"), {
@@ -209,7 +210,7 @@ async function addOglas(){
         opis: opis,
         prodajalec: '/users/' + user,
         prodano: false,
-        urlslike: "slika.png"
+        urlslike: url
       });
     console.log(docRef.id);
     await updateDoc(usrRef, {
@@ -296,4 +297,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
+export { saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
