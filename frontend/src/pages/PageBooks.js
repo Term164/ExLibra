@@ -1,24 +1,30 @@
 import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
-import { createNewChatGroup, getOglas}  from '../Firebase.js';
-import { SpinningCircles  } from 'react-loading-icons'
+import { createNewChatGroup, getOglas, getPredmetiInFakultete}  from '../Firebase.js';
+import { SpinningCircles  } from 'react-loading-icons';
 
 export default class PageBooks extends React.Component {
-	
+
 	constructor(props) {
 		super(props);
 		this.state = {
-		  books: []
+		  books: [],
+		  predmeti: [], 
+		  fakultete: [],
 		};
 		this.componentDidMount = this.componentDidMount.bind(this);
 	}
-	
+
 	async componentDidMount() {
 		this.setState({books: []});
 		const books = await getOglas();
-		this.setState({ books });
+		const data = await getPredmetiInFakultete();
+		const predmeti = data.predmeti;
+		const fakultete = data.fakultete;
+		this.setState({ books, predmeti, fakultete });
 	}
+	
 
 	arrayToDisplay(array, separator) {
 		return array.join(separator);
@@ -30,32 +36,77 @@ export default class PageBooks extends React.Component {
 	}
 
 	render() {
+		
 		let user = this.props.userData;
 
 		const results = [];
 
 		async function createNewContact(uid){
-			let gid = await createNewChatGroup(user, uid);
-			window.location.href = `/chat?chatId=${gid}`;
+			if(user){
+				let gid = await createNewChatGroup(user, uid);
+				window.location.href = `/chat?chatId=${gid}`;
+			}else{
+				window.location.href = "/login";
+			}
+			
 		}
 
-		for(const book of this.state.books) {//book.slika TODO need to use this
+		if(this.state.books.length > 0) {
+			for(const book of this.state.books) {
+				results.push(
+					<div key={book.id} className="item">
+						<img src={book.slika} alt={"book-" + book.id} />
+						<div className="info">
+							<h3>{book.ime}</h3>
+							<h5>{this.arrayToDisplay(book.faksi, '/')}, {this.getYearDisplay(book.time)}, {this.arrayToDisplay(book.predmeti, '/')}</h5>
+							<p>{book.opis}</p>
+						</div>
+						<div className="options">
+							<h4>{book.cena} €</h4>
+							<button onClick={() => {
+								createNewContact(book.uid);
+							}}>Kontakt</button>
+						</div>
+					</div>
+				);
+			}
+		} else {
 			results.push(
-				<div key={book.id} className="item">
-					<img src={book.slika} alt={"book-" + book.id} />
-					<div className="info">
-						<h3>{book.ime}</h3>
-						<h5>{this.arrayToDisplay(book.faksi, '/')}, {this.getYearDisplay(book.time)}, {this.arrayToDisplay(book.predmeti, '/')}</h5>
-						<p>{book.opis}</p>
-					</div>
-					<div className="options">
-						<h4>{book.cena} €</h4>
-						<button onClick={() => {
-							createNewContact(book.uid);
-						}}>Kontakt</button>
-					</div>
+				<h2 key={"id-no-res"} className="no-data">Ni zadetkov.</h2>
+			);
+		}
+		
+
+		const subOptions = [];
+
+		for(const sub of this.state.predmeti) {
+			subOptions.push(
+				<div key={sub}>
+					<input className="predmeti" type="checkbox" defaultChecked={true} id={sub} name={sub} value={sub}/>
+					<label >{sub}</label>
 				</div>
 			);
+		}
+
+		const uniOptions = [];
+
+		for(const faks of this.state.fakultete) {
+			uniOptions.push(
+				<div key={faks}>
+					<input className="fakultete" type="checkbox" defaultChecked={true} id={faks} name={faks} value={faks}/>
+					<label >{faks}</label>
+				</div>
+			);
+		}
+
+
+
+		window.onload = (event) => {
+			spremeniCeno();
+			getPredmetiInFakultete();
+		};
+		function spremeniCeno(){
+			document.getElementById("maxcena").innerHTML=document.getElementById("maxPrice").value;
 		}
 
 		return (
@@ -66,7 +117,7 @@ export default class PageBooks extends React.Component {
 					<div className="filters">
 						<div className="filter">
 							<h3>Razvrsti po:</h3>
-							<select onChange={this.componentDidMount} name="order" id="order" title="order">
+							<select  name="order" id="order" title="order">
 								<option value="costLow">Cena naraščajoča</option>
 								<option value="costHigh">Cena padajoča</option>
 								<option value="new">Novo</option>
@@ -77,45 +128,23 @@ export default class PageBooks extends React.Component {
 						<div className="filter">
 							<div>
 								<h3>Cena:</h3>
-								<h3>10</h3>
+								<h3 id='maxcena'>50</h3>
 							</div>
-							<input  onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
+							<input id="maxPrice" onChange={spremeniCeno}  type="range" min={10} max={200} name="cost" />
 						</div>
 						
 						<div className="filter">
 							<h3>Univerza:</h3>
-							<div>
-								<input type="checkbox" id="FRI" name="uni" value="FRI" />
-								<label >FRI</label>
-							</div>
-							<div>
-								<input type="checkbox" id="FMF" name="uni" value="FMF" />
-								<label >FMF</label>
-							</div>
-							<div>
-								<input type="checkbox" id="EF" name="uni" value="EF" />
-								<label >EF</label>
-							</div>
-							<div>
-								<input type="checkbox" id="FE" name="uni" value="FE" />
-								<label >FE</label>
-							</div>
+							{uniOptions}
 						</div>
 						
 						<div className="filter">
 							<h3>Predmet:</h3>
-							<div>
-								<input type="checkbox" id="mat1" name="uni" value="mat1" />
-								<label >mat1</label>
-							</div>
-							<div>
-								<input type="checkbox" id="oma1" name="uni" value="oma1" />
-								<label >oma1</label>
-							</div>
+							{subOptions}
 						</div>
 						
 						<div className="filter">
-							<button>Ponastavi</button>
+							<button id="shrani" onClick={this.componentDidMount}>Shrani</button>
 						</div>
 						
 					</div>

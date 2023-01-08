@@ -164,6 +164,26 @@ async function getBooks() {
     return knjList;
 }
 
+async function getPredmetiInFakultete() {
+    const colRef = collection(firestore, "books");
+    const q = query(colRef)
+    const docsSnap = await getDocs(q);
+    const knjList = {};
+    const docSnapshots = docsSnap.docs;
+    let predmeti = new Set();
+    let fakultete = new Set();
+    for (var i in docSnapshots) {
+        const data = docSnapshots[i].data();
+        const id = docSnapshots[i].id;
+        knjList[id] = {ime: data.ime, faksi: data.faks, predmeti: data.predmet};
+        data.faks.forEach(element => fakultete.add(element));
+        data.predmet.forEach(element => predmeti.add(element));
+    }
+    predmeti = Array.from(predmeti);
+    fakultete = Array.from(fakultete);
+    return {predmeti: predmeti, fakultete: fakultete};
+}
+
 
 async function getBook(id) {
     const documentReference = doc(firestore, "books", id);
@@ -179,39 +199,67 @@ async function getBook(id) {
     } 
 }
 
-async function getOglas() {
-    const order = document.getElementById("order").value;
-    //const price = document.getElementById("maxPrice").value;
-    let colRef = collection(firestore, "oglas");
 
-    //where("cena", "<", Number(price)),
-    switch (order) {
-        case "costLow":
-            colRef = query(colRef,  orderBy("cena"));
-            break;
-          
-        case "costHigh":
-            colRef = query(colRef, orderBy("cena", "desc"));
-            break;
-        case "new":
-            colRef = query(colRef, orderBy("datum", "desc"));
-            break;
-        case "old":
-            colRef = query(colRef, orderBy("datum", "asc"));
-            break;
-        default:
-            console.error("Filter error");
-    }
+let prvic = true
+async function getOglas() {
     
-    const docsSnap = await getDocs(colRef);
+    const order = document.getElementById("order").value;
+    const price = document.getElementById("maxPrice").value;
+    let colRef = collection(firestore, "oglas");
+    const checkboxes = document.querySelectorAll(`input.fakultete[type='checkbox']:checked`);
+    const fakultete = [...checkboxes].map(checkbox => checkbox.value);
+    const checkboxes1 = document.querySelectorAll(`input.predmeti[type='checkbox']:checked`);
+    const predmeti = [...checkboxes1].map(checkbox => checkbox.value);
+    let docsSnap;
     const knjList = [];
-    const docSnapshots = docsSnap.docs;
-    for (var i in docSnapshots) {
-        const data = docSnapshots[i].data();
-        const bid = data.knjiga.id;
-        const bData = await getBook(bid);
-        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
+    let docSnapshots;
+
+    if(prvic){
+        
+        docsSnap = await getDocs(colRef);
+        docSnapshots = docsSnap.docs;
+        for (var i in docSnapshots) {
+            const data = docSnapshots[i].data();
+            const bid = data.knjiga.id;
+            const bData = await getBook(bid);
+            knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
+            
+        }
     }
+    else{
+
+        switch (order) {
+            case "costLow":
+                colRef = query(colRef,  orderBy("cena"));
+                break;
+              
+            case "costHigh":
+                colRef = query(colRef, orderBy("cena", "desc"));
+                break;
+            case "new":
+                colRef = query(colRef, orderBy("datum", "desc"));
+                break;
+            case "old":
+                colRef = query(colRef, orderBy("datum", "asc"));
+                break;
+            default:
+                console.error("Filter error");
+        }
+        docsSnap = await getDocs(colRef);
+        docSnapshots = docsSnap.docs;
+        for (var i in docSnapshots) {
+            const data = docSnapshots[i].data();
+            const bid = data.knjiga.id;
+            const bData = await getBook(bid);
+            const presekFakultet = fakultete.filter(value => bData.faks.includes(value));
+            const presekPredmetov = predmeti.filter(value => bData.predmet.includes(value));
+            if(data.cena < price && presekFakultet.length > 0 && presekPredmetov.length > 0){
+                knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
+            }
+            
+        }
+    }
+    prvic = false
     return knjList;
 }
 
@@ -364,4 +412,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { removeAdd, getAllUserBooks ,saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
+export { removeAdd, getAllUserBooks ,saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas, getPredmetiInFakultete};
