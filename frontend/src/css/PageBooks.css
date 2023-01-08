@@ -4,6 +4,14 @@
 	justify-content: center;
 }
 
+.no-data {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    font-family: monospace;
+}
+
 .content-pb .left {
 	width: 240px;
 	background: var(--back);

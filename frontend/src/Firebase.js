@@ -210,7 +210,6 @@ async function getOglas() {
     const fakultete = [...checkboxes].map(checkbox => checkbox.value);
     const checkboxes1 = document.querySelectorAll(`input.predmeti[type='checkbox']:checked`);
     const predmeti = [...checkboxes1].map(checkbox => checkbox.value);
-    console.log(predmeti)
     let docsSnap;
     const knjList = [];
     let docSnapshots;
@@ -254,7 +253,6 @@ async function getOglas() {
             const bData = await getBook(bid);
             const presekFakultet = fakultete.filter(value => bData.faks.includes(value));
             const presekPredmetov = predmeti.filter(value => bData.predmet.includes(value));
-            console.log(presekPredmetov)
             if(data.cena < price && presekFakultet.length > 0 && presekPredmetov.length > 0){
                 knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
             }
