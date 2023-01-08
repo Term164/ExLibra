@@ -8,14 +8,17 @@
 
     <ListView
         android:id="@+id/chatList"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/listFooter"
-        android:layout_alignParentTop="true"
-        android:transcriptMode="alwaysScroll"
         android:stackFromBottom="true"
         android:divider="@android:color/secondary_text_light_nodisable"
-        android:dividerHeight="10sp" />
+        android:dividerHeight="10sp"
+        android:layout_alignParentTop="true"
+        android:transcriptMode="alwaysScroll"
+         />
+
+
 
     <LinearLayout
         android:id="@+id/listFooter"
@@ -44,6 +47,7 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_send"
             tools:ignore="SpeakableTextPresentCheck" />
+
     </LinearLayout>
 
 
