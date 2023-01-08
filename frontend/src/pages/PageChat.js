@@ -52,12 +52,10 @@ export default function PageChat(props) {
 					const scroll = item.parentNode;
 		
 					let oldSelectedItem = scroll.selectedItem;
-					if (oldSelectedItem != null) {
+					if (item != scroll.selectedItem && oldSelectedItem != null) {
 						oldSelectedItem.classList.remove('selected');
 					}
-					if (item == scroll.selectedItem) {
-						scroll.selectedItem = null;
-					} else {
+					if (item != scroll.selectedItem) {
 						item.classList.add('selected');
 						scroll.selectedItem = item;
 					}
