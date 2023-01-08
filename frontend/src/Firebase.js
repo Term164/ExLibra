@@ -180,8 +180,8 @@ async function getPredmetiInFakultete() {
         data.predmet.forEach(element => predmeti.add(element));
     }
     predmeti = Array.from(predmeti);
-    fakultete= Array.from(fakultete);
-    console.log(predmeti, fakultete)
+    fakultete = Array.from(fakultete);
+    return {predmeti: predmeti, fakultete: fakultete};
 }
 
 

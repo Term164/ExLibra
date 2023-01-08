@@ -9,7 +9,9 @@ export default class PageBooks extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		  books: []
+		  books: [],
+		  predmeti: [], 
+		  fakultete: [],
 		};
 		this.componentDidMount = this.componentDidMount.bind(this);
 	}
@@ -17,7 +19,10 @@ export default class PageBooks extends React.Component {
 	async componentDidMount() {
 		this.setState({books: []});
 		const books = await getOglas();
-		this.setState({ books });
+		const data = await getPredmetiInFakultete();
+		const predmeti = data.predmeti;
+		const fakultete = data.fakultete;
+		this.setState({ books, predmeti, fakultete });
 	}
 	
 
@@ -41,7 +46,7 @@ export default class PageBooks extends React.Component {
 			window.location.href = `/chat?chatId=${gid}`;
 		}
 
-		for(const book of this.state.books) {//book.slika TODO need to use this
+		for(const book of this.state.books) {
 			results.push(
 				<div key={book.id} className="item">
 					<img src={book.slika} alt={"book-" + book.id} />
@@ -59,6 +64,31 @@ export default class PageBooks extends React.Component {
 				</div>
 			);
 		}
+
+		const subOptions = [];
+
+		for(const sub of this.state.predmeti) {
+			subOptions.push(
+				<div key={sub}>
+					<input className="fakultete" type="checkbox" id={sub} name={sub} value={sub}/>
+					<label >{sub}</label>
+				</div>
+			);
+		}
+
+		const uniOptions = [];
+
+		for(const faks of this.state.fakultete) {
+			uniOptions.push(
+				<div key={faks}>
+					<input className="fakultete" type="checkbox" id={faks} name={faks} value={faks}/>
+					<label >{faks}</label>
+				</div>
+			);
+		}
+
+
+
 		window.onload = (event) => {
 			spremeniCeno();
 			getPredmetiInFakultete();
@@ -93,34 +123,12 @@ export default class PageBooks extends React.Component {
 						
 						<div className="filter">
 							<h3>Univerza:</h3>
-							<div>
-								<input className="fakultete" type="checkbox" id="FRI" name="uni" value="FRI"/>
-								<label >FRI</label>
-							</div>
-							<div>
-								<input className="fakultete" type="checkbox" id="FMF" name="uni" value="FMF" />
-								<label >FMF</label>
-							</div>
-							<div>
-								<input className="fakultete" type="checkbox" id="EF" name="uni" value="EF" />
-								<label >EF</label>
-							</div>
-							<div>
-								<input className="fakultete" type="checkbox" id="FE" name="uni" value="FE" />
-								<label >FE</label>
-							</div>
+							{uniOptions}
 						</div>
 						
 						<div className="filter">
 							<h3>Predmet:</h3>
-							<div>
-								<input className="predmeti" type="checkbox" id="mat1" name="uni" value="mat1" />
-								<label >mat1</label>
-							</div>
-							<div>
-								<input className="predmeti" type="checkbox" id="oma1" name="uni" value="oma1" />
-								<label >oma1</label>
-							</div>
+							{subOptions}
 						</div>
 						
 						<div className="filter">
