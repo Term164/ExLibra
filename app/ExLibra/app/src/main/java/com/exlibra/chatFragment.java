@@ -51,7 +51,7 @@ public class chatFragment extends Fragment {
     //initialise boilerplate attributes and methods
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private ArrayList<book> bookList = new ArrayList<>();
+
     private OnFragmentInteractionListener mListener;
 
     String TAG = "DEBUG";

@@ -41,6 +41,7 @@ public class SpecificChatActivity extends AppCompatActivity {
     String TAG = "DEBUG";
 
     static String groupId;
+    static String hisUsername;
 
     ListView list;
     ArrayAdapter<String> adapter;
@@ -55,8 +56,12 @@ public class SpecificChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_chat);
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
+        if (extras != null) {
             groupId = extras.getString("gid");
+            hisUsername = extras.getString("hisUsername");
+        }
+
+        setTitle(hisUsername);
 
         list = findViewById(R.id.chatList);
 

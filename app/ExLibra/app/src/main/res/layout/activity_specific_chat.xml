@@ -15,9 +15,7 @@
         android:divider="@android:color/secondary_text_light_nodisable"
         android:dividerHeight="10sp"
         android:layout_alignParentTop="true"
-        android:transcriptMode="alwaysScroll"
-         />
-
+        android:transcriptMode="alwaysScroll" />
 
 
     <LinearLayout
