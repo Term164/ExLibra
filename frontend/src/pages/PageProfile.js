@@ -37,7 +37,8 @@ export default class PageProfile extends React.Component {
 		}
 
 		const handleSelectAdd = (aid) => {
-			this.setState({selectedAdd: aid});
+			if(this.state.selectedAdd === aid) this.setState({selectedAdd: null})
+			else this.setState({selectedAdd: aid});
 		}
 				
 		return (
@@ -107,7 +108,6 @@ export default class PageProfile extends React.Component {
 								{
 									
 								this.state.userAds.map(Add =>{
-									//console.log(Add);
 									return <div key={Add.aid} 
 
 										onClick={(e) => {
@@ -119,7 +119,7 @@ export default class PageProfile extends React.Component {
 												if (oldSelectedItem != null) {
 													oldSelectedItem.classList.remove('selected');
 												}
-												if (item == scroll.selectedItem) {
+												if (item === scroll.selectedItem) {
 													scroll.selectedItem = null;
 												} else {
 													item.classList.add('selected');

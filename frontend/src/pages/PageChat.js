@@ -3,6 +3,7 @@ import '../css/PageChat.css';
 import { loadMessages, saveMessage, getListOfAllChats } from '../Firebase';
 
 export default function PageChat(props) {
+	
 
 	const [users, setUsers] = useState([]);
 	const [messages, setMessages] = useState([]);
@@ -16,10 +17,11 @@ export default function PageChat(props) {
 			if(user){
 				const array = await getListOfAllChats(user);
 				setUsers(array);
+				const params = new URLSearchParams(window.location.search);
+				loadMessagesAndListenToChanges(params.get("chatId"));
 			}
 		}
 		getData();
-
 	},[user]);
 
 	const addNewMessage = (message) =>{
