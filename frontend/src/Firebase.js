@@ -186,7 +186,6 @@ async function getBook(id) {
 async function getOglas() {
     const order = document.getElementById("order").value;
     const price = document.getElementById("maxPrice").value;
-    console.log(price);
     let colRef = collection(firestore, "oglas");
 
     switch (order) {
@@ -201,11 +200,8 @@ async function getOglas() {
         
         
     }
-
     
-    //const q = query(colRef);
     const docsSnap = await getDocs(colRef);
-    console.log("hmmm");
     const knjList = [];
     const docSnapshots = docsSnap.docs;
     for (var i in docSnapshots) {
@@ -213,7 +209,7 @@ async function getOglas() {
         const bid = data.knjiga.id;
         const knj = await getBook(bid);
         const bData = knj.data();
-        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
+        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
     }
     return knjList;
 }
@@ -227,7 +223,7 @@ async function addOglas(opis, cena, bid, url){
         knjiga: knjRef,
         //lokacija: "neki",
         opis: opis,
-        prodajalec: '/users/' + user,
+        prodajalec: user,
         prodano: false,
         urlslike: url
       });

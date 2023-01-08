@@ -196,3 +196,14 @@
 	}
 
 }
+
+.loading{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.spinner{
+	margin-top: 20%;
+	transform: scale(1.8);
+}

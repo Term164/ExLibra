@@ -1,7 +1,8 @@
 import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
-import { getOglas}  from '../Firebase.js';
+import { createNewChatGroup, getOglas}  from '../Firebase.js';
+import { SpinningCircles  } from 'react-loading-icons'
 
 export default class PageBooks extends React.Component {
 	
@@ -28,11 +29,16 @@ export default class PageBooks extends React.Component {
 	}
 
 	render() {
+		let user = this.props.userData;
 
 		const results = [];
 
+		function createNewContact(uid){
+			createNewChatGroup(user, uid);
+			window.location.href = "/chat?test";
+		}
+
 		for(const book of this.state.books) {//book.slika TODO need to use this
-			console.log(book);
 			results.push(
 				<div key={book.id} className="item">
 					<img src={book.slika} alt={"book-" + book.id} />
@@ -43,8 +49,9 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="options">
 						<h4>{book.cena} €</h4>
-						<button>Kupi</button>
-						<button>Kontakt</button>
+						<button onClick={() => {
+							createNewContact(book.uid);
+						}}>Kontakt</button>
 					</div>
 				</div>
 			);
@@ -104,8 +111,7 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="items">
 
-						{results}
-
+						{results.length == 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
 					</div>
 				</div>
 			</div>
