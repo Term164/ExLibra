@@ -19,7 +19,6 @@ export default class PageBooks extends React.Component {
 	async componentDidMount() {
 		this.setState({books: []});
 		const books = await getOglas();
-		console.log(books.length)
 		const data = await getPredmetiInFakultete();
 		const predmeti = data.predmeti;
 		const fakultete = data.fakultete;
