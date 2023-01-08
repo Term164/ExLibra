@@ -42,6 +42,6 @@
     <string name="name">name</string>
     <string name="profile_photo_file_name">profile_photo_file_name</string>
     <string name="pick_profile_picture">pick_profile_picture</string>
-    <string name="settings">settings</string>
+    <string name="settings">Settings</string>
 
 </resources>

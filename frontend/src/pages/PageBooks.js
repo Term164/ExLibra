@@ -74,28 +74,47 @@ export default class PageBooks extends React.Component {
 						</div>
 
 						<div className="filter">
-							<h3>Cena:</h3>
-							<input onChange={getOglas} id="maxPrice" type="range" name="cost" />
+							<div>
+								<h3>Cena:</h3>
+								<h3>10</h3>
+							</div>
+							<input  onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
 						</div>
 						
 						<div className="filter">
 							<h3>Univerza:</h3>
-							<input type="text" name="school" />
-						</div>
-						
-						<div className="filter">
-							<h3>Letnik:</h3>
-							<input type="radio" id="html" name="fav_language" value="HTML" />
-							<label >HTML</label>
-							<input type="radio" id="css" name="fav_language" value="CSS" />
-							<label >CSS</label>
-							<input type="radio" id="javascript" name="fav_language" value="JavaScript" />
-							<label >JavaScript</label>
+							<div>
+								<input type="checkbox" id="FRI" name="uni" value="FRI" />
+								<label >FRI</label>
+							</div>
+							<div>
+								<input type="checkbox" id="FMF" name="uni" value="FMF" />
+								<label >FMF</label>
+							</div>
+							<div>
+								<input type="checkbox" id="EF" name="uni" value="EF" />
+								<label >EF</label>
+							</div>
+							<div>
+								<input type="checkbox" id="FE" name="uni" value="FE" />
+								<label >FE</label>
+							</div>
 						</div>
 						
 						<div className="filter">
 							<h3>Predmet:</h3>
-							<input type="text" name="className" />
+							<div>
+								<input type="checkbox" id="mat1" name="uni" value="mat1" />
+								<label >mat1</label>
+							</div>
+							<div>
+								<input type="checkbox" id="oma1" name="uni" value="oma1" />
+								<label >oma1</label>
+							</div>
+						</div>
+						
+						<div className="filter">
+							<button>Ponastavi</button>
 						</div>
 						
 					</div>

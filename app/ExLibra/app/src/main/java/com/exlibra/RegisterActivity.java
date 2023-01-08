@@ -30,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     TextInputEditText etRegEmail;
     TextInputEditText etRegPassword;
+    TextInputEditText etRegUsername;
     TextView tvLoginHere;
     Button btnRegister;
 
@@ -42,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         etRegEmail = findViewById(R.id.etRegEmail);
         etRegPassword = findViewById(R.id.etRegPass);
+        etRegUsername = findViewById(R.id.etRegUserName);
         tvLoginHere = findViewById(R.id.tvLoginHere);
         btnRegister = findViewById(R.id.btnRegister);
 
@@ -60,14 +62,18 @@ public class RegisterActivity extends AppCompatActivity {
     private void createUser(){
         String email = etRegEmail.getText().toString();
         String password = etRegPassword.getText().toString();
+        String username = etRegUsername.getText().toString();
 
         if (TextUtils.isEmpty(email)){
             etRegEmail.setError("Email cannot be empty");
             etRegEmail.requestFocus();
-        }else if (TextUtils.isEmpty(password)){
+        }else if (TextUtils.isEmpty(password)) {
             etRegPassword.setError("Password cannot be empty");
             etRegPassword.requestFocus();
-        }else{
+        } else if (TextUtils.isEmpty(username)) {
+            etRegUsername.setError("Username cannot be empty");
+            etRegUsername.requestFocus();
+        } else{
             mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -82,9 +88,10 @@ public class RegisterActivity extends AppCompatActivity {
                         Map<String, Object> user = new HashMap<>();
                         user.put("email", email);
                         user.put("password", "");
-                        String username;    // user types username in the field
-                        user.put("username", username = email.split("@")[0]);
-
+                        user.put("username", username);
+                        user.put("name", "");
+                        user.put("surname", "");
+                        user.put("tel", "");
                         user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
                         user.put("ads", new ArrayList<Object>());
                         user.put("wishlist", new ArrayList<Object>());

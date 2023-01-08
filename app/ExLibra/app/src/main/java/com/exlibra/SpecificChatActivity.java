@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,11 +18,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpecificChatActivity extends AppCompatActivity {
 
@@ -38,6 +45,58 @@ public class SpecificChatActivity extends AppCompatActivity {
             groupId = extras.getString("gid");
 
         getChatWithUser(groupId);
+
+        ImageButton sendButton = findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText messageInput = (EditText) findViewById(R.id.messageInput);
+                String input = messageInput.getText().toString();
+                messageInput.setText("");
+                if (input.equals(""))
+                    return;
+
+                ArrayList<String> arrayList = new ArrayList<>();
+                ListView list = findViewById(R.id.chatList);
+                ArrayAdapter<String> adapter;
+                if (list.getAdapter() == null) {
+                    adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+                }else{
+                    adapter = (ArrayAdapter<String>) list.getAdapter();
+                }
+
+                //shraniš
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
+                String myEmail = usr.getEmail();
+
+                CollectionReference messageCollection = db.collection("/group").document(groupId).collection("/messages");
+
+                Map<String, Object> messageObject = new HashMap<>();
+                messageObject.put("sentBy", myEmail);
+                messageObject.put("messageText", input);
+                messageObject.put("sentAt", FieldValue.serverTimestamp());
+
+                messageCollection.add(messageObject);
+
+                Object timestamp = (FieldValue.serverTimestamp());
+                String time;
+                try {
+                    time = " ("+timestamp.toString().split(" ")[3]+")";
+                }catch (Exception e){
+                    Log.e(TAG, "got "+ timestamp.toString() );
+                    Log.e(TAG, e.toString());
+                    time = " (now)";
+                }
+
+                // izpišeš
+                String line = myEmail+time+":\n"+input;
+                adapter.add(line);
+                list.setAdapter(adapter);
+
+            }
+
+        });
 
     }
 
@@ -66,11 +125,11 @@ public class SpecificChatActivity extends AppCompatActivity {
                     Date timestamp = ((Timestamp)(message.get("sentAt"))).toDate();
                     String time;
                     try {
-                        time = timestamp.toString().split(" ")[3];
+                        time = " ("+timestamp.toString().split(" ")[3]+")";
                     }catch (Exception e){
                         time = "";
                     }
-                    String line =   message.getString("sentBy")+ " ("+time+"):\n" +
+                    String line = message.getString("sentBy")+time+":\n" +
                             message.getString("messageText");
 
                     adapter.add(line);

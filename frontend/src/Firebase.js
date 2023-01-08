@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { deleteDoc, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion} from "@firebase/firestore";
+import { deleteDoc, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion, where} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ref, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
@@ -184,14 +184,20 @@ async function getOglas() {
     //const price = document.getElementById("maxPrice").value;
     let colRef = collection(firestore, "oglas");
 
+    //where("cena", "<", Number(price)),
     switch (order) {
         case "costLow":
-            colRef = query(colRef, orderBy("cena"));
+            colRef = query(colRef,  orderBy("cena"));
             break;
           
         case "costHigh":
             colRef = query(colRef, orderBy("cena", "desc"));
-            console.log("kaj");
+            break;
+        case "new":
+            colRef = query(colRef, orderBy("datum", "desc"));
+            break;
+        case "old":
+            colRef = query(colRef, orderBy("datum", "asc"));
             break;
         default:
             console.error("Filter error");
@@ -241,6 +247,8 @@ async function getAddByID(aid){
 async function addOglas(opis, cena, bid, url){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
+    let datum = Date();
+    console.log(datum);
     const usrRef = doc(firestore, "users", user);
     
     const docRef = await addDoc(collection(firestore, "oglas"), {
@@ -250,6 +258,7 @@ async function addOglas(opis, cena, bid, url){
         opis: opis,
         prodajalec: user,
         prodano: false,
+        datum: datum,
         urlslike: url
       });
     console.log(docRef.id);

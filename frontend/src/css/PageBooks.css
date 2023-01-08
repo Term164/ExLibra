@@ -22,10 +22,11 @@
 
 .content-pb .left .filters .filter {
 	border-top: 2px solid #00000040;
-	margin-top: 10px;
+	margin-top: 5px;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	padding: 5px 0;
 }
 
 .content-pb .left .filters .filter h3 {
@@ -38,6 +39,30 @@
 	font-family: monospace;
     margin: 0;
     color: var(--text);
+}
+
+.content-pb .left .filters .filter select {
+	width: -webkit-fill-available;
+    width: -moz-available;
+}
+
+.content-pb .left .filters .filter input[type='range'] {
+	width: -webkit-fill-available;
+    width: -moz-available;
+}
+
+.content-pb .left .filters .filter div {
+	display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.content-pb .left .filters .filter input[type='checkbox'] {
+	margin: 4px;
+}
+
+.content-pb .left .filters .filter button {
+	margin: auto;
 }
 
 .content-pb .right {
