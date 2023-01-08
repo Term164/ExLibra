@@ -12,7 +12,7 @@ export default function PageChat(props) {
 
 	let user = props.userData;
 
-	useEffect(() =>{
+	useEffect(() => {
 		async function getData(){
 			if(user){
 				const array = await getListOfAllChats(user);
