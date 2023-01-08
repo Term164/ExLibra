@@ -23,15 +23,14 @@ export default function UserProfile(props){
     const username = useRef();
     const email = useRef();
     const tel = useRef();
+    const input = useRef();
 
     let user = props.userData;
     let myimg;
-    let input;
     let reader = new FileReader();
 
     async function uploadImg(){
-        input = document.getElementById("fileInput");
-        let imgToUpload = input.files[0];
+        let imgToUpload = input.current.files[0];
         let url = await saveProfileImage(imgToUpload);
         return url;
     }
@@ -39,7 +38,9 @@ export default function UserProfile(props){
     const handleSaveUserData = async event => {
         event.preventDefault();
         try {
-            let publicUrl = await uploadImg();
+            let publicUrl
+            if(input.current.files.length > 0) publicUrl = await uploadImg();
+            else publicUrl = user.profileurl
             await saveUserData(name.current.value, publicUrl, surname.current.value, username.current.value, email.current.value, tel.current.value);
             setIsSaved(true);
         } catch (error) {
@@ -56,9 +57,9 @@ export default function UserProfile(props){
     window.onload=function(){
         // Get html element references
         myimg = document.getElementById("image");
-        input = document.getElementById("fileInput");
+
         // Add event listeners
-        input.addEventListener('change', handleSelected);
+        input.current.addEventListener('change', handleSelected);
         reader.addEventListener('load', handleEvent);
     }
 
@@ -68,7 +69,7 @@ export default function UserProfile(props){
     }
     
     function handleSelected(e) {      
-        const selectedFile = input.files[0];
+        const selectedFile = input.current.files[0];
         if (selectedFile) {
             reader.readAsDataURL(selectedFile);
         }
@@ -79,7 +80,7 @@ export default function UserProfile(props){
             <div className="profile-image">
                 <img id="image" src={user ? user.profileurl : 'https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4'} alt="Pfp-1" />
                 <img className="overlay" src={imageOverlay} alt="overlay" />
-                <input type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
+                <input ref={input} type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
             </div>
             <div className="profile-info">
                 <div className="line">
