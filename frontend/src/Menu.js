@@ -1,39 +1,27 @@
 import React from 'react';
 import './css/Menu.css';
 import logo from './images/LogoNoText.png';
-import {getAuth} from './Firebase.js';
+import {signOutUser} from './Firebase.js'
 
 export default class Menu extends React.Component {
 
-	state = {
-		user: null
-	}
-
-	componentDidMount() {
-		getAuth().onAuthStateChanged(user => {
-		  this.setState({ user });
-		});
-	}
-
 	handleLogout = () => {
-		getAuth().signOut().then(() => {
+		signOutUser().then(() => {
 			window.location.href = '/login';
-		}).catch(error => {
-			
-		});
+		})
 	}
 
 	render() {
-		let user = this.state.user;
+		let user = this.props.userData;
 
-		let logElement;
+		let logElements;
 		let userName;
 
 		if(user != null) {
-			logElement = <a href="#" onClick={this.handleLogout}>Izpis</a>;
-			userName = <h1>{user.displayName}</h1>;
+			logElements = <><a href="/chat">Pogovor</a><a href="/profile">Profil</a><a href="#" onClick={this.handleLogout}>Izpis</a></>;
+			userName = <h1>{user.username}</h1>;
 		} else {
-			logElement = <a href="/login">Prijava</a>;
+			logElements = <a href="/login">Prijava</a>;
 		}
 
 		return (
@@ -44,9 +32,7 @@ export default class Menu extends React.Component {
 			</div>
 			<div className="nav-right">
 			<a href="/">Knjige</a>
-			<a href="/chat">Pogovor</a>
-			<a href="/profile">Profil</a>
-			{logElement}
+			{logElements}
 			</div>
 		</nav>
 		);

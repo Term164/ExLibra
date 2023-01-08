@@ -18,8 +18,8 @@ export default function PageLogin() {
   async function googleLoginHandler(e) {
     e.preventDefault();
     try {
-      const result = await signInWithGoogle();
-      navigate('/');
+      await signInWithGoogle();
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
       //TODO need to add some error message or something !!!!!!!!!
@@ -28,7 +28,6 @@ export default function PageLogin() {
 
   async function defaultLoginHandler(e){
     e.preventDefault();
-    console.log(email.current.value, password.current.value);
     try {
       setIsLoading(true);
       await signInDefault(email.current.value, password.current.value);
@@ -43,8 +42,6 @@ export default function PageLogin() {
     e.preventDefault();
     navigate('/register');
   }
-
-  
 
   return (
     <>
@@ -73,7 +70,7 @@ export default function PageLogin() {
         </div>
         <div className="google-reg">
           <form onSubmit={googleLoginHandler}>
-            <button type='submit'><BsGoogle/> Google prijava</button>
+            <button type='submit' className="with-icons"><BsGoogle/> Google prijava</button>
           </form>
         </div>
       </div>

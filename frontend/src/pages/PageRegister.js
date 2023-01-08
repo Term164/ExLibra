@@ -19,12 +19,13 @@ export default function PageRegister() {
     e.preventDefault();
     const emailValue = email.current.value;
     const passwordValue = password.current.value;
+
     setIsLoading(true);
     await registerUserDefault(emailValue, passwordValue, username.current.value);
     setIsLoading(false);
     setIsActive(true);
     await signInDefault(emailValue, passwordValue);
-    navigate('/');    
+    window.location.href = '/';
   }
 
   return (

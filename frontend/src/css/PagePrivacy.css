@@ -26,7 +26,7 @@
 .content-ppy .privacy h2 {
     color: var(--text);
     font-family: monospace;
-    margin: 10px 0 0;
+    margin: 20px 0 10px;
 }
 
 .content-ppy .privacy h3 {
@@ -42,9 +42,10 @@
 }
 
 .content-ppy .privacy p {
-    margin: 5px 0 0;
+    margin: 5px 5px 0;
     color: var(--text);
     font-family: monospace;
+    font-size: 14px;
 }
 
 .content-ppy .privacy ul {
@@ -56,6 +57,11 @@
 .content-ppy .privacy li {
     color: var(--text);
     font-family: monospace;
+}
+
+.content-ppy .privacy .break {
+    height: 20px;
+    width: 100%;
 }
 
 @media (max-width: 740px) {
