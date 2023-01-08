@@ -43,7 +43,27 @@ export default function PageChat(props) {
 	function renderUsers(){
 		if(users){
 			return users.map(doc => {
-				return <div key={doc.username} onClick={() => {loadMessagesAndListenToChanges(doc.gid)}} className="user"><img src={doc.url} alt="u1" /><h3>{doc.username}</h3></div>
+				return <div key={doc.username} onClick={(e) => {
+					loadMessagesAndListenToChanges(doc.gid);
+
+					const item = e.currentTarget;
+					const scroll = item.parentNode;
+		
+					let oldSelectedItem = scroll.selectedItem;
+					if (oldSelectedItem != null) {
+						oldSelectedItem.classList.remove('selected');
+					}
+					if (item == scroll.selectedItem) {
+						scroll.selectedItem = null;
+					} else {
+						item.classList.add('selected');
+						scroll.selectedItem = item;
+					}
+
+				}} className="user">
+					<img src={doc.url} alt="u1" />
+					<h3>{doc.username}</h3>
+				</div>
 			});
 		}else{
 			return <></>;
