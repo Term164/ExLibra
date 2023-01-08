@@ -1,7 +1,8 @@
 import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
-import { getOglas}  from '../Firebase.js';
+import { createNewChatGroup, getOglas}  from '../Firebase.js';
+import { SpinningCircles  } from 'react-loading-icons'
 
 export default class PageBooks extends React.Component {
 	
@@ -28,11 +29,16 @@ export default class PageBooks extends React.Component {
 	}
 
 	render() {
+		let user = this.props.userData;
 
 		const results = [];
 
+		function createNewContact(uid){
+			createNewChatGroup(user, uid);
+			window.location.href = "/chat?test";
+		}
+
 		for(const book of this.state.books) {//book.slika TODO need to use this
-			//console.log(book);
 			results.push(
 				<div key={book.id} className="item">
 					<img src={book.slika} alt={"book-" + book.id} />
@@ -43,8 +49,9 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="options">
 						<h4>{book.cena} €</h4>
-						<button>Kupi</button>
-						<button>Kontakt</button>
+						<button onClick={() => {
+							createNewContact(book.uid);
+						}}>Kontakt</button>
 					</div>
 				</div>
 			);
@@ -67,28 +74,47 @@ export default class PageBooks extends React.Component {
 						</div>
 
 						<div className="filter">
-							<h3>Cena:</h3>
-							<input onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
+							<div>
+								<h3>Cena:</h3>
+								<h3>10</h3>
+							</div>
+							<input  onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
 						</div>
 						
 						<div className="filter">
 							<h3>Univerza:</h3>
-							<input type="text" name="school" />
-						</div>
-						
-						<div className="filter">
-							<h3>Letnik:</h3>
-							<input type="radio" id="html" name="fav_language" value="HTML" />
-							<label >HTML</label>
-							<input type="radio" id="css" name="fav_language" value="CSS" />
-							<label >CSS</label>
-							<input type="radio" id="javascript" name="fav_language" value="JavaScript" />
-							<label >JavaScript</label>
+							<div>
+								<input type="checkbox" id="FRI" name="uni" value="FRI" />
+								<label >FRI</label>
+							</div>
+							<div>
+								<input type="checkbox" id="FMF" name="uni" value="FMF" />
+								<label >FMF</label>
+							</div>
+							<div>
+								<input type="checkbox" id="EF" name="uni" value="EF" />
+								<label >EF</label>
+							</div>
+							<div>
+								<input type="checkbox" id="FE" name="uni" value="FE" />
+								<label >FE</label>
+							</div>
 						</div>
 						
 						<div className="filter">
 							<h3>Predmet:</h3>
-							<input type="text" name="className" />
+							<div>
+								<input type="checkbox" id="mat1" name="uni" value="mat1" />
+								<label >mat1</label>
+							</div>
+							<div>
+								<input type="checkbox" id="oma1" name="uni" value="oma1" />
+								<label >oma1</label>
+							</div>
+						</div>
+						
+						<div className="filter">
+							<button>Ponastavi</button>
 						</div>
 						
 					</div>
@@ -104,8 +130,7 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="items">
 
-						{results}
-
+						{results.length == 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
 					</div>
 				</div>
 			</div>

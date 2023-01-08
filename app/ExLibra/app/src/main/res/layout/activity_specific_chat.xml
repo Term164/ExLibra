@@ -13,7 +13,8 @@
         android:layout_above="@+id/listFooter"
         android:layout_alignParentTop="true"
         android:transcriptMode="alwaysScroll"
-        android:divider="@android:color/background_light"
+        android:stackFromBottom="true"
+        android:divider="@android:color/secondary_text_light_nodisable"
         android:dividerHeight="10sp" />
 
     <LinearLayout
@@ -21,7 +22,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:theme="@style/AppTheme" >
+
 
         <EditText
             android:id="@+id/messageInput"
@@ -30,8 +33,9 @@
             android:layout_weight="1"
             android:inputType="textShortMessage"
             android:lines="1"
+            android:textColor="@color/black"
             android:minHeight="48dp"
-            android:singleLine="true"
+            android:singleLine="false"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton

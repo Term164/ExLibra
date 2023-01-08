@@ -74,7 +74,7 @@ async function saveAddImage(file){
 
 
 async function saveProfileImage(file){
-    const filePath = `pfp/${getAuth().currentUser.uid}/${file.name}`;
+    const filePath = `pfp/${getAuth().currentUser.uid}/profilePicture`;
     return await saveImage(file, filePath);
 }
 
@@ -141,7 +141,6 @@ async function getListOfAllChats(user){
 
 async function saveUserData(name, imeSlike, surname, username, email, tel){
     const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
-    console.log(imeSlike.fullPath);
     await setDoc(documentReference, {
        name: name,
        profileurl: imeSlike,
@@ -205,9 +204,7 @@ async function getOglas() {
             colRef = query(colRef, orderBy("datum", "asc"));
             break;      
     }
-
-    console.log(colRef)
-    //const q = query(colRef);
+    
     const docsSnap = await getDocs(colRef);
     const knjList = [];
     const docSnapshots = docsSnap.docs;
@@ -216,7 +213,7 @@ async function getOglas() {
         const bid = data.knjiga.id;
         const knj = await getBook(bid);
         const bData = knj.data();
-        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena});
+        knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
     }
     return knjList;
 }
@@ -232,7 +229,7 @@ async function addOglas(opis, cena, bid, url){
         knjiga: knjRef,
         //lokacija: "neki",
         opis: opis,
-        prodajalec: '/users/' + user,
+        prodajalec: user,
         prodano: false,
         datum: datum,
         urlslike: url
@@ -304,11 +301,10 @@ function loadMessages(gid, addNewMessage) {
             const changes = snapshot.docChanges();
             for (let i = 0; i < changes.length; i++) {
                 const change = changes[i];
-                //console.log(change.doc.data());
-                if (change.type === 'removed') {
-                    //deleteMessage(change.doc.id);
-                } else if (change.type === 'added') {
-                    addNewMessage(change.doc.data());
+                if (change.type === 'added') {
+                    let messageData = change.doc.data();
+                    messageData.id = change.doc.id;
+                    addNewMessage(messageData);
                 }
             }
             resolve();
