@@ -5,6 +5,7 @@ import { getAllUserBooks, removeAdd } from '../Firebase';
 
 export default class PageProfile extends React.Component {
 
+
 	constructor(props){
 		super(props);
 		this.state = {userAds: [], selectedAdd: null};
@@ -18,7 +19,7 @@ export default class PageProfile extends React.Component {
 		}
 	}
 
-	render(){
+	render() {
 		let user = this.props.userData;
 		
 		function navigateSell(){
@@ -67,36 +68,7 @@ export default class PageProfile extends React.Component {
 									<h3>Test Title 4</h3>
 									<p>This are the test tags</p>
 								</div>
-								
-								<div className="item">
-									<h3>Test Title 5</h3>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<h3>Test Title 6</h3>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<h3>Test Title 7</h3>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<h3>Test Title 8</h3>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<h3>Test Title 9</h3>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<h3>Test Title 10</h3>
-									<p>This are the test tags</p>
-								</div>
+
 							</div>
 		
 						</div>
@@ -116,7 +88,28 @@ export default class PageProfile extends React.Component {
 									
 								this.state.userAds.map(Add =>{
 									//console.log(Add);
-									return <div key={Add.aid} onClick={() => {handleSelectAdd(Add.aid)}} className="item">
+									return <div key={Add.aid} 
+
+										onClick={(e) => {
+												handleSelectAdd(Add.aid);
+												const item = e.currentTarget;
+												const scroll = item.parentNode;
+									
+												let oldSelectedItem = scroll.selectedItem;
+												if (oldSelectedItem != null) {
+													oldSelectedItem.classList.remove('selected');
+												}
+												if (item == scroll.selectedItem) {
+													scroll.selectedItem = null;
+												} else {
+													item.classList.add('selected');
+													scroll.selectedItem = item;
+												}
+											}
+										}
+										
+										className="item">
+											
 										<div className="upper">
 											<div>
 												<h4 className="sell">Prodajam</h4>
@@ -127,6 +120,7 @@ export default class PageProfile extends React.Component {
 										<p>{Add.knjiga.faks.toString()}</p>
 									</div>
 								})}
+
 							</div>
 						</div>
 		
