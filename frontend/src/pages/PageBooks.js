@@ -32,7 +32,7 @@ export default class PageBooks extends React.Component {
 		const results = [];
 
 		for(const book of this.state.books) {//book.slika TODO need to use this
-			console.log(book);
+			//console.log(book);
 			results.push(
 				<div key={book.id} className="item">
 					<img src={book.slika} alt={"book-" + book.id} />
@@ -68,7 +68,7 @@ export default class PageBooks extends React.Component {
 
 						<div className="filter">
 							<h3>Cena:</h3>
-							<input onChange={getOglas} id="maxPrice" type="range" name="cost" />
+							<input onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
 						</div>
 						
 						<div className="filter">
