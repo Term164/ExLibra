@@ -42,8 +42,13 @@ export default class PageBooks extends React.Component {
 		const results = [];
 
 		async function createNewContact(uid){
-			let gid = await createNewChatGroup(user, uid);
-			window.location.href = `/chat?chatId=${gid}`;
+			if(user){
+				let gid = await createNewChatGroup(user, uid);
+				window.location.href = `/chat?chatId=${gid}`;
+			}else{
+				window.location.href = "/login";
+			}
+			
 		}
 
 		for(const book of this.state.books) {
@@ -70,7 +75,7 @@ export default class PageBooks extends React.Component {
 		for(const sub of this.state.predmeti) {
 			subOptions.push(
 				<div key={sub}>
-					<input className="predmeti" type="checkbox" id={sub} name={sub} value={sub}/>
+					<input className="predmeti" type="checkbox" defaultChecked={true} id={sub} name={sub} value={sub}/>
 					<label >{sub}</label>
 				</div>
 			);
@@ -81,7 +86,7 @@ export default class PageBooks extends React.Component {
 		for(const faks of this.state.fakultete) {
 			uniOptions.push(
 				<div key={faks}>
-					<input className="fakultete" type="checkbox" id={faks} name={faks} value={faks}/>
+					<input className="fakultete" type="checkbox" defaultChecked={true} id={faks} name={faks} value={faks}/>
 					<label >{faks}</label>
 				</div>
 			);
