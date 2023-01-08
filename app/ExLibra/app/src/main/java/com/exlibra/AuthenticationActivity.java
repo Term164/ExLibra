@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -47,11 +48,9 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         //test
         mAuth = FirebaseAuth.getInstance();
+        Log.e("matuh", "mauth is : "+mAuth.getCurrentUser() );
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null){
-            System.out.println("=======================================================================================================================================Nisem logiran");;
-        }
-        //--test
+
 
         google = findViewById(R.id.google);
         login = findViewById(R.id.login);
@@ -84,54 +83,22 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     //Google
     private void SignIn() {
-        Intent intent=gsc.getSignInIntent();
+        Log.e("SIGIN", "SignIn: IM IN" );
+        Intent intent = gsc.getSignInIntent();
         startActivityForResult(intent, 100);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("DEBUG", "google onactresult");
         if(requestCode==100){
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            Log.d("DEBUG", "google: "+task);
             try {
                 task.getResult(ApiException.class);
-
-                // Saving a user in the users collection
-                String UID = mAuth.getCurrentUser().getUid();
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                CollectionReference users = db.collection("/users");
-
-                Map<String, Object> user = new HashMap<>();
-                user.put("email", mAuth.getCurrentUser().getEmail() );
-                user.put("password", "");
-                user.put("username", mAuth.getCurrentUser().getDisplayName());
-                user.put("name", "");
-                user.put("surname", "");
-                user.put("tel", "");
-                user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
-                user.put("ads", new ArrayList<Object>());
-                user.put("wishlist", new ArrayList<Object>());
-                user.put("groups", new ArrayList<Object>());
-
-                users.document(UID).set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
-                        Log.d("SUCCESS CREATING", "User successfully added.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FAILURE CREATING", "Error while adding user.", e);
-                    }
-                });
-
                 HomeActivity();
             } catch (ApiException e) {
-                Log.e("DEBUG", e.toString() );
+
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         }

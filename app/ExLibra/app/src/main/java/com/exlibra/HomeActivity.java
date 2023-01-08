@@ -106,6 +106,7 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
 
         db = FirebaseFirestore.getInstance();
 
+
         //initialise toolbar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);

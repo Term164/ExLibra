@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,8 +64,8 @@ public class SpecificChatActivity extends AppCompatActivity {
         usr = FirebaseAuth.getInstance().getCurrentUser();
         myEmail = usr.getEmail();
         getUsername();
-
-        getChatWithUser(groupId);
+        Log.e(TAG, "onCreate: "+myUsername );
+        //getChatWithUser(groupId);
 
         ImageButton sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -141,8 +144,10 @@ public class SpecificChatActivity extends AppCompatActivity {
             }
         });
 
+        getChatWithUser(groupId);
 
     }
+
 
 
     void getUsername(){
