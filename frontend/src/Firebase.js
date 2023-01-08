@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { deleteDoc, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion, where} from "@firebase/firestore";
+import { deleteDoc, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ref, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
