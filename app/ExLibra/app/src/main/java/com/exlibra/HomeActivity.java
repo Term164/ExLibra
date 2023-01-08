@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -78,10 +79,10 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
         if (user != null){
             System.out.println("===================================================================================================================================Zdaj sem logiran");;
         }
-        gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-        gsc= GoogleSignIn.getClient(this,gso);
+        gsc = GoogleSignIn.getClient(this,gso);
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
@@ -105,11 +106,9 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
 
         db = FirebaseFirestore.getInstance();
 
-
         //initialise toolbar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
 
         //set up first fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -120,9 +119,6 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.action_home);
-
-
-
 
 
     }

@@ -1,5 +1,6 @@
 package com.exlibra;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,9 +17,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthenticationActivity extends AppCompatActivity {
 
@@ -57,7 +66,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         });
 
 
-
         //Google
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -89,7 +97,37 @@ public class AuthenticationActivity extends AppCompatActivity {
             try {
                 task.getResult(ApiException.class);
 
-                Log.e("DEBUG", "res: "+task.getResult(ApiException.class));
+                // Saving a user in the users collection
+                String UID = mAuth.getCurrentUser().getUid();
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference users = db.collection("/users");
+
+                Map<String, Object> user = new HashMap<>();
+                user.put("email", mAuth.getCurrentUser().getEmail() );
+                user.put("password", "");
+                user.put("username", mAuth.getCurrentUser().getDisplayName());
+                user.put("name", "");
+                user.put("surname", "");
+                user.put("tel", "");
+                user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
+                user.put("ads", new ArrayList<Object>());
+                user.put("wishlist", new ArrayList<Object>());
+                user.put("groups", new ArrayList<Object>());
+
+                users.document(UID).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d("SUCCESS CREATING", "User successfully added.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("FAILURE CREATING", "Error while adding user.", e);
+                    }
+                });
 
                 HomeActivity();
             } catch (ApiException e) {
