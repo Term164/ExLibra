@@ -258,7 +258,6 @@ async function getOglas() {
             }
             
         }
-        //console.log(predmeti,)
     }
     prvic = false
     return knjList;
