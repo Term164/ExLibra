@@ -74,7 +74,7 @@ async function saveAddImage(file){
 
 
 async function saveProfileImage(file){
-    const filePath = `pfp/${getAuth().currentUser.uid}/${file.name}`;
+    const filePath = `pfp/${getAuth().currentUser.uid}/profilePicture`;
     return await saveImage(file, filePath);
 }
 
@@ -141,7 +141,6 @@ async function getListOfAllChats(user){
 
 async function saveUserData(name, imeSlike, surname, username, email, tel){
     const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
-    console.log(imeSlike.fullPath);
     await setDoc(documentReference, {
        name: name,
        profileurl: imeSlike,
