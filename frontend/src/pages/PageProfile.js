@@ -1,13 +1,42 @@
 import React from 'react';
 import '../css/PageProfile.css';
 import UserProfile from '../components/userDataField';
+import { getAllUserBooks, removeAdd } from '../Firebase';
 
 export default class PageProfile extends React.Component {
 
+	constructor(props){
+		super(props);
+		this.state = {userAds: [], selectedAdd: null};
+	}
+
+	async componentDidUpdate(prevProps){;
+		if(!prevProps.userData && this.props.userData){
+			this.setState({
+				userAds: await getAllUserBooks(this.props.userData)
+			});
+		}
+	}
+
 	render(){
 		let user = this.props.userData;
+		
 		function navigateSell(){
 			window.location.href = "/sell";
+		}
+
+		const handleRemoveAdd = async () => {
+			if(this.state.selectedAdd != null){
+				await removeAdd(this.state.selectedAdd, user);
+				this.setState({
+					userAds: this.state.userAds.filter(add => add.aid !== this.state.selectedAdd)
+				});
+				this.setState({selectedAdd: null});
+			}
+		}
+
+		const handleSelectAdd = (aid) => {
+			this.setState({selectedAdd: aid});
 		}
 				
 		return (
@@ -83,118 +112,27 @@ export default class PageProfile extends React.Component {
 						<h2>Tvoje knjige</h2>
 						<div className="book-area">
 							<div className="scroll">
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="own">Imam</h4>
-											<h3>Test Title 1</h3>
+								{
+									
+								this.state.userAds.map(Add =>{
+									//console.log(Add);
+									return <div key={Add.aid} onClick={() => {handleSelectAdd(Add.aid)}} className="item">
+										<div className="upper">
+											<div>
+												<h4 className="sell">Prodajam</h4>
+												<h3>{Add.knjiga.ime}</h3>
+											</div>
+											<h3>{Add.cena} €</h3>
 										</div>
+										<p>{Add.knjiga.faks.toString()}</p>
 									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 2</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 3</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 4</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 5</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-		
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="own">Imam</h4>
-											<h3>Test Title 6</h3>
-										</div>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="own">Imam</h4>
-											<h3>Test Title 7</h3>
-										</div>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="own">Imam</h4>
-											<h3>Test Title 8</h3>
-										</div>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 9</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-								
-								<div className="item">
-									<div className="upper">
-										<div>
-											<h4 className="sell">Podajam</h4>
-											<h3>Test Title 10</h3>
-										</div>
-										<h3>3,50 €</h3>
-									</div>
-									<p>This are the test tags</p>
-								</div>
-		
+								})}
 							</div>
 						</div>
 		
 						<div className="options">
 							<button onClick={navigateSell}>Dodaj</button>
-							<button>Odstrani</button>
+							<button onClick={handleRemoveAdd}>Odstrani</button>
 						</div>
 		
 					</div>

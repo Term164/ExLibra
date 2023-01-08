@@ -111,7 +111,7 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="items">
 
-						{results.length == 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
+						{results.length === 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
 					</div>
 				</div>
 			</div>

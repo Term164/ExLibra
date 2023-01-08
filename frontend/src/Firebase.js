@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion} from "@firebase/firestore";
+import { deleteDoc, orderBy, onSnapshot, serverTimestamp, getFirestore, doc, setDoc, getDoc, getDocs, collection, query, addDoc, updateDoc, arrayUnion} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ref, getStorage, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { getFirebaseConfig } from './firebase-config.js';
@@ -166,25 +166,22 @@ async function getBooks() {
 
 
 async function getBook(id) {
-    const colRef = collection(firestore, "books");
-    const q = query(colRef);
-    const docsSnap = await getDocs(q);
-    let book;
-    docsSnap.forEach(doc => {
-        if (id === doc.id) {
-            book = doc;
-            return;
+    const documentReference = doc(firestore, "books", id);
+    try{
+        const document = await getDoc(documentReference);
+        if(document.exists()){
+            return document.data();
+        }else{
+            console.log("No such document!");
         }
-    });
-    if (!book) {
-        throw new Error(`Book with ID ${id} not found`);
-    }
-    return book;
+    }   catch (e){
+        console.error("Error getting user Add data: ", e);
+    } 
 }
 
 async function getOglas() {
     const order = document.getElementById("order").value;
-    const price = document.getElementById("maxPrice").value;
+    //const price = document.getElementById("maxPrice").value;
     let colRef = collection(firestore, "oglas");
 
     switch (order) {
@@ -196,8 +193,8 @@ async function getOglas() {
             colRef = query(colRef, orderBy("cena", "desc"));
             console.log("kaj");
             break;
-        
-        
+        default:
+            console.error("Filter error");
     }
     
     const docsSnap = await getDocs(colRef);
@@ -206,12 +203,41 @@ async function getOglas() {
     for (var i in docSnapshots) {
         const data = docSnapshots[i].data();
         const bid = data.knjiga.id;
-        const knj = await getBook(bid);
-        const bData = knj.data();
+        const bData = await getBook(bid);
         knjList.push({id: docSnapshots[i].id, slika: data.urlslike, ime: bData.ime, faksi: bData.faks, time: bData.letoizdaje.seconds, predmeti: bData.predmet, opis: data.opis, cena: data.cena, uid: data.prodajalec});
     }
     return knjList;
 }
+
+
+async function getAllUserBooks(user){
+    const allUserAdds = [];
+
+    await Promise.all(user.ads.map(async (add) =>{
+        const groupData = await getAddByID(add);
+        groupData.knjiga = await getBook(groupData.knjiga.path.split("/")[1]);
+        allUserAdds.push(groupData);
+    }));
+
+    return allUserAdds;
+}
+
+async function getAddByID(aid){
+    const documentReference = doc(firestore, "oglas", aid);
+    try{
+        const document = await getDoc(documentReference);
+        if(document.exists()){
+            let data = document.data();
+            data.aid = document.id;
+            return data;
+        }else{
+            console.log("No such document!");
+        }
+    }   catch (e){
+        console.error("Error getting user Add data: ", e);
+    } 
+}
+
 async function addOglas(opis, cena, bid, url){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
@@ -230,6 +256,15 @@ async function addOglas(opis, cena, bid, url){
     await updateDoc(usrRef, {
         ads: arrayUnion(docRef.id)
     });
+}
+
+async function removeAdd(aid, user){
+    await deleteDoc(doc(firestore, 'oglas', aid));
+    const documentReference = doc(firestore, "users", getAuth().currentUser.uid);
+    let newUserAdsArray = user.ads.filter(id => id !== aid)
+    await setDoc(documentReference, {
+       ads: newUserAdsArray
+    }, {merge: true});
 }
 
 function isUserSignedIn() {
@@ -317,4 +352,4 @@ async function saveMessage(gid, username, messageText) {
 }
 
 
-export { saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
+export { removeAdd, getAllUserBooks ,saveAddImage, saveProfileImage, getListOfAllChats ,getSpecificUserData ,getGroupData ,saveMessage, loadMessages, createNewChatGroup, getAllUsers, saveNewUserData, saveUserData ,getUserData, signOutUser, getAuth, signInWithGoogle, signInDefault, registerUserDefault, getUserSignedIn, isUserSignedIn, getUserName, getOglas, getBooks, addOglas};
