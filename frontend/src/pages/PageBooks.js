@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/PageBooks.css';
 import Footer from '../Footer';
 import { createNewChatGroup, getOglas, getPredmetiInFakultete}  from '../Firebase.js';
-import { SpinningCircles  } from 'react-loading-icons'
+import { SpinningCircles  } from 'react-loading-icons';
 
 export default class PageBooks extends React.Component {
 
@@ -51,24 +51,31 @@ export default class PageBooks extends React.Component {
 			
 		}
 
-		for(const book of this.state.books) {
+		if(this.state.books.length > 0) {
+			for(const book of this.state.books) {
+				results.push(
+					<div key={book.id} className="item">
+						<img src={book.slika} alt={"book-" + book.id} />
+						<div className="info">
+							<h3>{book.ime}</h3>
+							<h5>{this.arrayToDisplay(book.faksi, '/')}, {this.getYearDisplay(book.time)}, {this.arrayToDisplay(book.predmeti, '/')}</h5>
+							<p>{book.opis}</p>
+						</div>
+						<div className="options">
+							<h4>{book.cena} €</h4>
+							<button onClick={() => {
+								createNewContact(book.uid);
+							}}>Kontakt</button>
+						</div>
+					</div>
+				);
+			}
+		} else {
 			results.push(
-				<div key={book.id} className="item">
-					<img src={book.slika} alt={"book-" + book.id} />
-					<div className="info">
-						<h3>{book.ime}</h3>
-						<h5>{this.arrayToDisplay(book.faksi, '/')}, {this.getYearDisplay(book.time)}, {this.arrayToDisplay(book.predmeti, '/')}</h5>
-						<p>{book.opis}</p>
-					</div>
-					<div className="options">
-						<h4>{book.cena} €</h4>
-						<button onClick={() => {
-							createNewContact(book.uid);
-						}}>Kontakt</button>
-					</div>
-				</div>
+				<h2 key={"id-no-res"} className="no-data">Ni zadetkov.</h2>
 			);
 		}
+		
 
 		const subOptions = [];
 
