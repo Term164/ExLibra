@@ -15,6 +15,7 @@ export default class PageBooks extends React.Component {
 	}
 	
 	async componentDidMount() {
+		this.setState({books: []});
 		const books = await getOglas();
 		this.setState({ books });
 	}
@@ -33,9 +34,9 @@ export default class PageBooks extends React.Component {
 
 		const results = [];
 
-		function createNewContact(uid){
-			createNewChatGroup(user, uid);
-			window.location.href = "/chat?test";
+		async function createNewContact(uid){
+			let gid = await createNewChatGroup(user, uid);
+			window.location.href = `/chat?chatId=${gid}`;
 		}
 
 		for(const book of this.state.books) {//book.slika TODO need to use this

@@ -300,13 +300,18 @@ async function createNewChatGroup(currentUser, otherUserId){
         const currentUserUid = getAuth().currentUser.uid;
 
         if(intersection.length < 1){
+            let gid;
             await addDoc(collection(firestore, 'group'), {
                 createdAt: serverTimestamp(),
                 members: [currentUserUid, otherUserId]
             }).then(async function(docRef){
                 await addGroupToUser(currentUserUid, docRef.id);
-                addGroupToUser(otherUserId, docRef.id);
+                await addGroupToUser(otherUserId, docRef.id);
+                gid = docRef.id;
             });
+            return gid;
+        }else{
+            return intersection[0];
         }
     } catch (error) {
         console.error("Error when loading chat messages:", error);
