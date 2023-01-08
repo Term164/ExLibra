@@ -15,11 +15,9 @@ export default class Menu extends React.Component {
 		let user = this.props.userData;
 
 		let logElements;
-		let userName;
 
 		if(user != null) {
 			logElements = <><a href="/chat">Pogovor</a><a href="/profile">Profil</a><a href="#" onClick={this.handleLogout}>Izpis</a></>;
-			userName = <h1>{user.username}</h1>;
 		} else {
 			logElements = <a href="/login">Prijava</a>;
 		}
@@ -28,7 +26,7 @@ export default class Menu extends React.Component {
 		<nav>
 			<div className="nav-left">
 			<a href="/"><img src={logo} alt="icon" width="50px" height="50px" title="icon"></img></a>
-			{userName}
+			<a href="/"><h1>ExLibra</h1></a>
 			</div>
 			<div className="nav-right">
 			<a href="/">Knjige</a>
