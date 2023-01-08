@@ -200,7 +200,7 @@
 
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
 	.content-pb {
 		flex-direction: column;
@@ -218,6 +218,10 @@
 
 	.content-pb .right {
 		width: auto;
+	}
+
+	.content-pb .items .item img {
+		height: 74px;
 	}
 
 }

@@ -145,7 +145,7 @@ export default function PageChat(props) {
 		};
 
 		barHandleRef.current.addEventListener('mousedown', barHandleMouseDown);
-		scrollAreaRef.current.addEventListener('scroll', scrollAreaWheel);
+		scrollAreaRef.current.addEventListener('wheel', scrollAreaWheel);
 		document.addEventListener('mouseup', documentMouseUp);
 		document.addEventListener('mousemove', documentMouseMove);
 
@@ -164,18 +164,18 @@ export default function PageChat(props) {
 			usersRef.current.style.top = (-scrollUsersInfo.usersNumber) + "px";
 		};
 
-		usersAreaRef.current.addEventListener('scroll', scrollUsersArea);
+		usersAreaRef.current.addEventListener('wheel', scrollUsersArea);
 
 
 		return () => {
 			window.removeEventListener('resize', resizeEvent);
 
 			barHandleRef.current.removeEventListener('mousedown', barHandleMouseDown);
-			scrollAreaRef.current.removeEventListener('scroll', scrollAreaWheel);
+			scrollAreaRef.current.removeEventListener('wheel', scrollAreaWheel);
 			document.removeEventListener('mouseup', documentMouseUp);
 			document.removeEventListener('mousemove', documentMouseMove);
 
-			usersAreaRef.current.removeEventListener('scroll', scrollUsersArea);
+			usersAreaRef.current.removeEventListener('wheel', scrollUsersArea);
 
 		};
 

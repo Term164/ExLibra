@@ -84,7 +84,27 @@ export default class PageProfile extends React.Component {
 					<div className="bookshelf-section section">
 						<h2>Tvoje knjige</h2>
 						<div className="book-area">
-							<div className="scroll">
+							<div className="scroll"  onWheel={(e) => {
+								const scroll = e.currentTarget;
+								const csArea = scroll.parentNode;
+
+								if(scroll.clientHeight < csArea.clientHeight) {
+									return;
+								}
+								
+								if(scroll.scrollNumber == null) {
+									scroll.scrollNumber = 0;
+								}
+		
+								scroll.scrollNumber += e.deltaY * 0.3;
+								if(scroll.scrollNumber <= 0) {
+									scroll.scrollNumber = 0;
+								} else if(scroll.scrollNumber >= scroll.clientHeight - csArea.clientHeight) {
+									scroll.scrollNumber = scroll.clientHeight - csArea.clientHeight;
+								}
+								scroll.style.top = (-scroll.scrollNumber) + "px";
+
+							}} >
 								{
 									
 								this.state.userAds.map(Add =>{

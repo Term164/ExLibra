@@ -195,3 +195,15 @@ body {
 #users-display .user:hover > img {
 	border: 2px solid #fffa;
 }
+
+@media (max-width: 540px) {
+
+	.content-pc .right h2 {
+		font-size: 14px;
+	}
+
+	.content-pc .right {
+		width: 100px;
+	}
+
+}

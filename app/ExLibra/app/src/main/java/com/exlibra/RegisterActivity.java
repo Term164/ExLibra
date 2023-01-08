@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
                         user.put("name", "");
                         user.put("surname", "");
                         user.put("tel", "");
-                        user.put("profileurl", "/pfp/default.png"); // ali pa pfp/default.png
+                        user.put("profileurl", "https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4"); //  pa pfp/default.png
                         user.put("ads", new ArrayList<Object>());
                         user.put("wishlist", new ArrayList<Object>());
                         user.put("groups", new ArrayList<Object>());
