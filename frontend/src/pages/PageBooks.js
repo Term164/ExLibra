@@ -19,6 +19,7 @@ export default class PageBooks extends React.Component {
 	async componentDidMount() {
 		this.setState({books: []});
 		const books = await getOglas();
+		console.log(books.length)
 		const data = await getPredmetiInFakultete();
 		const predmeti = data.predmeti;
 		const fakultete = data.fakultete;
@@ -70,7 +71,7 @@ export default class PageBooks extends React.Component {
 		for(const sub of this.state.predmeti) {
 			subOptions.push(
 				<div key={sub}>
-					<input className="fakultete" type="checkbox" id={sub} name={sub} value={sub}/>
+					<input className="predmeti" type="checkbox" id={sub} name={sub} value={sub}/>
 					<label >{sub}</label>
 				</div>
 			);
