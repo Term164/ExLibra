@@ -82,9 +82,9 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
                 if (!task.isSuccessful())
                     return;
                 for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                    adImages.add(R.drawable.ic_local_library); // url slike, zajebana stvar
-                    adBookNames.add(""); // get book name
-                    adSeller.add(""); // get seller name
+                    adImages.add(R.drawable.ic_flash_on_24dp); // url slike, zajebana stvar
+                    adBookNames.add("math"); // get book name
+                    adSeller.add("me"); // get seller name
                     adPrices.add(doc.getDouble("cena"));
 
                 }
@@ -205,22 +205,21 @@ class AdAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View singleItem = convertView;
         AdViewHolder holder = null;
-        Log.e("adapter", "singleItem "+singleItem);
         if (singleItem == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             singleItem = layoutInflater.inflate(R.layout.ad_item, parent, false);
             holder = new AdViewHolder(singleItem);
             singleItem.setTag(holder);
-            Log.e("adapter", "holder is "+holder+" and tag is "+singleItem.getTag() );
         } else {
-            Log.e("adapter", "attempting to assign to holder "+singleItem.getTag() );
             holder = (AdViewHolder) singleItem.getTag();
         }
-        Log.e("adapter", "holder "+holder);
         holder.adImage.setImageResource(images[position]);
-        holder.adBookName.setText(adBookNames[position]);
-        holder.adSeller.setText(adSellers[position]);
+        holder.adBookName.setText("BRUH"); //adBookNames[position]
+        //Log.e("adapter", "setting "+adBookNames[position] );
+        holder.adSeller.setText("BRUH"); //adSellers[position]
+        //Log.e("adapter", "setting "+adSellers[position] );
         holder.adPrice.setText( String.valueOf(adPrices[position]) );
+        //Log.e("adapter", "setting "+adPrices[position] );
         return super.getView(position, convertView, parent);
     }
 

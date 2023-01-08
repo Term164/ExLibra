@@ -102,7 +102,7 @@ public class booksFragment extends Fragment {
         //for (int i = 0; i < 30; i++)
         //  items.add("Item: "+i);
 
-        CollectionReference cr = db.collection("/oglas");
+        CollectionReference cr = db.collection("/books");
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -114,9 +114,9 @@ public class booksFragment extends Fragment {
                     Log.d("DATAAAaaaaaa", doc.getData().toString());
 
                     Map<Object, Object> oglas = new HashMap<>();
-                    oglas.put("prodano", false);
-                    oglas.put("cena", doc.get("cena"));
-                    oglas.put("opis", doc.get("opis"));
+                    oglas.put("ime", doc.getString("ime"));
+                    oglas.put("avtor", doc.getString("avtor"));
+                    oglas.put("zalozba", doc.getString("zalozba"));
 
                     Log.e("DEBUG", doc.get("prodajalec")+"");
                     //Object user =db.collection("/users").document( doc.get("prodajalec").toString() ).get("");
@@ -140,72 +140,6 @@ public class booksFragment extends Fragment {
 
 
 
-    }
-
-    private void getRentedBookTitles(final View view) {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String userID = user.getUid();
-        db.collection("books").whereEqualTo("rentingID", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<book> books = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        book book = document.toObject(com.exlibra.book.class);
-                        book.setFirestoreID(document.getId());
-                        books.add(book);
-                    }
-                    if (books.size() == 0) {
-                        books.add(new book(null, null, null, null, "rent a book", null, false, false, null));
-                    }
-                    initRentingBooksRecylerView(view, books);
-                }
-            }
-        });
-    }
-
-    //method to get all books
-    private void getScannedBookTitles(final View view) {
-        //initialise firestore connection
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String userID = user.getUid();
-        //get all associated books
-        db.collection("books").whereEqualTo("ownerReference", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<book> books = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        book book = document.toObject(book.class);
-                        book.setFirestoreID(document.getId());
-                        books.add(book);
-                    }
-                    //single book class to indicate no books have been added yet
-                    if (books.size() == 0) {
-                        books.add(new book(null, null, null, null, "add a book", null, false, false, null));
-                    }
-                    //initialise recycle view
-                    initScannedBooksRecyclerView(view, books);
-                }
-            }
-        });
-    }
-
-    //method to initialise recycle view
-    private void initScannedBooksRecyclerView(View view, ArrayList<book> books) {
-        //RecyclerView recyclerView = view.findViewById(R.id.scannedBooksView);
-        //scannedBooksRecyclerViewAdapter adapter = new scannedBooksRecyclerViewAdapter(getContext(), books);
-        //recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    private void initRentingBooksRecylerView(View view, ArrayList<book> books) {
-        //RecyclerView recyclerView = view.findViewById(R.id.rentingBooksView);
-        //rentingBooksRecyclerViewAdapter adapter = new rentingBooksRecyclerViewAdapter(getContext(), books);
-        //recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public void onButtonPressed(Uri uri) {
