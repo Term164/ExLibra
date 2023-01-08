@@ -171,6 +171,10 @@ body {
 	cursor: pointer;
 }
 
+#users-display .selected {
+    background: var(--highlight);
+}
+
 #users-display .user:hover {
 	background: #00000090;
 }
