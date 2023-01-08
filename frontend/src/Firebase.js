@@ -248,7 +248,6 @@ async function addOglas(opis, cena, bid, url){
     let user = getUserSignedIn().uid;
     let knjRef = doc(firestore, 'books/' + bid);
     let datum = Date();
-    console.log(datum);
     const usrRef = doc(firestore, "users", user);
     
     const docRef = await addDoc(collection(firestore, "oglas"), {
@@ -261,7 +260,6 @@ async function addOglas(opis, cena, bid, url){
         datum: datum,
         urlslike: url
       });
-    console.log(docRef.id);
     await updateDoc(usrRef, {
         ads: arrayUnion(docRef.id)
     });
