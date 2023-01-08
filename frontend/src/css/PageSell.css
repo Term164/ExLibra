@@ -141,3 +141,7 @@ button:hover {
 	}
 
 }
+
+.content-ps .notification {
+	height: 50px;
+}

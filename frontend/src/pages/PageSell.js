@@ -2,6 +2,8 @@ import React from 'react';
 import '../css/PageSell.css';
 import tempImg1 from '../images/temp-book.jpg';
 import { getBooks, addOglas, saveAddImage}  from '../Firebase.js';
+import {CgCloseR} from 'react-icons/cg';
+import { SpinningCircles } from 'react-loading-icons'
 
 export default class PageSell extends React.Component {
 
@@ -10,11 +12,16 @@ export default class PageSell extends React.Component {
 		this.desc = React.createRef();
 		this.price = React.createRef();
 		this.bid = React.createRef();
+		this.input = React.createRef();
 	}
 
 	state = {
 		books: {},
 		selectedBookValue: '',
+		isSaved: false,
+		isError: false,
+		isLoading: false,
+		errorMessage: null
 	}
 
 	async componentDidMount() {
@@ -32,6 +39,19 @@ export default class PageSell extends React.Component {
 	}
 
 	render() {
+		const handleNotificationClick = event =>{
+			this.setState({
+				isSaved: false,
+				isError: false
+			});
+		}
+
+		let savedConfirmation = <div className='notification sucess fadeInElement'><h2>Nov oglas uspešno ustvarjen!</h2><button onClick={handleNotificationClick}><CgCloseR/></button></div>
+		let errorMessage
+
+		if (this.state.errorMessage != null){
+			 errorMessage = <div className='notification error fadeInElement'><h2>{this.state.errorMessage}</h2><button onClick={handleNotificationClick}><CgCloseR/></button></div>;
+		}
 
 		let myimg;
     	let input;
@@ -47,10 +67,19 @@ export default class PageSell extends React.Component {
 
 		const saveAdd = async event => {
 			event.preventDefault();
+			handleNotificationClick();
+			input = document.getElementById("fileInput");
+			if(input.files.length < 1){
+				this.setState({isError: true, errorMessage: "Ni izbrane slike oglasa!"});
+				return;
+			}
 			try {
+				this.setState({isLoading: true});
 				let imageUrl = await uploadImg();
 				await addOglas(this.desc.current.value, this.price.current.value, this.bid.current.value, imageUrl);
+				this.setState({isLoading: false, isSaved: true});
 			} catch (error) {
+				this.setState({isLoading: false, isError: true, errorMessage: "Prišlo je do napake pri ustvarjanju oglasa!"});
 				console.error(error);
 			}
 		}
@@ -96,7 +125,7 @@ export default class PageSell extends React.Component {
 				<div className="left">
 					<div className="book-image">
 						<img id='image' src={tempImg1} alt="sell" />
-						<input type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
+						<input ref={this.input} type="file" id="fileInput" accept=".png,.jpg,.jpeg" name="profile" />
 					</div>
 				</div>
 				<div className="right">
@@ -125,9 +154,11 @@ export default class PageSell extends React.Component {
 					
 					<div className="line center">
 						<button onClick={saveAdd}>Save</button>
-					</div>
-
+					</div>	
+					{this.state.isLoading && <span className='loading'><SpinningCircles className='spinner'/></span> }
 				</div>
+				{this.state.isError && errorMessage}
+				{this.state.isSaved && savedConfirmation}
 			</div>
 		)
 	}

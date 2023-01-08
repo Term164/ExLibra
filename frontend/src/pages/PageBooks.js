@@ -78,7 +78,7 @@ export default class PageBooks extends React.Component {
 								<h3>Cena:</h3>
 								<h3>10</h3>
 							</div>
-							<input  onChange={getOglas} id="maxPrice" type="range" name="cost" />
+							<input  onChange={this.componentDidMount} id="maxPrice" type="range" min={10} max={200} name="cost" />
 						</div>
 						
 						<div className="filter">
@@ -130,7 +130,7 @@ export default class PageBooks extends React.Component {
 					</div>
 					<div className="items">
 
-						{results.length == 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
+						{results.length === 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
 					</div>
 				</div>
 			</div>
