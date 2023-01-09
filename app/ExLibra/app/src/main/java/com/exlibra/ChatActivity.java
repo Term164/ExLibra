@@ -9,7 +9,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +36,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
@@ -43,7 +51,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayList<String> groupIds = new ArrayList<>();
     ArrayList<String> userIds = new ArrayList<>();
     ArrayList<String> usernames = new ArrayList<>();
-    ArrayList<Integer> userImages = new ArrayList<Integer>();
+    ArrayList<String> userImages = new ArrayList<String>();
 
     Context chatActivityContext;
 
@@ -62,24 +70,26 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
         */
         chatActivityContext = this;
         getUserChatGroups();
+
+
+        //ImageView img = findViewById(R.id.imagetest);
+
+        //new DownloadImageTask(img).execute("https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4");
+
     }
 
 
     public void getUserChatGroups(){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
-        String myEmail = usr.getEmail();
         String myUserId = FirebaseAuth.getInstance().getUid();
-        Log.e(TAG, "userid: "+myUserId);
         CollectionReference cr = db.collection("/group");
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (!task.isSuccessful())
                     return;
-                //ArrayList<String> groupsArrayList = new ArrayList<>();
-                //ListView list = findViewById(R.id.list);
-                //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, groupsArrayList);
+
                 for (DocumentSnapshot doc: task.getResult().getDocuments()) {
                     ArrayList<String> documentMembers = (ArrayList<String>) doc.get("members");
                     if (documentMembers.size()<2) continue;
@@ -100,19 +110,16 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
                         for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                             if (userIds.contains(doc.getId())) {
                                 usernames.add(doc.getString("username"));
-                                userImages.add(R.drawable.ic_person_24dp);
+                                //userImages.add(doc.getString("profileurl"));
                                 //Log.d(TAG, "Added: "+doc.getString("username"));
                             }
                         }
-                        //Log.e("CHAT", "usernames is "+usernames.size());
-                        //adapter.addAll(usernames);
-                        // If empty, we should display a message on how to start chatting, or something like that
 
-                        int[] userImagesInt = makeIntArray(userImages);
+
+                        String[] userImagesString = makeStringArray(userImages);
                         String[] usernamesString = makeStringArray(usernames);
-                        ChatAdapter chatAdapter = new ChatAdapter(chatActivityContext, usernamesString, userImagesInt);
+                        ChatAdapter chatAdapter = new ChatAdapter(chatActivityContext, usernamesString);
 
-                        Log.e(TAG, "adapter has "+chatAdapter.images.length+" images");
                         Log.e(TAG, "adapter has "+chatAdapter.usernames.length+" usernames");
 
                         list.setAdapter(chatAdapter);  // adapter
@@ -140,8 +147,6 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Log.e(TAG, "onItemClick: CLICKED "+position);
@@ -149,6 +154,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Intent i = new Intent(ChatActivity.this, SpecificChatActivity.class);
         i.putExtra("gid", groupIds.get(position));
+        i.putExtra("hisUsername", usernames.get(position));
         startActivity(i);
     }
 }
@@ -157,13 +163,11 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
 
 class ChatAdapter extends ArrayAdapter<String>{
     Context context;
-    int[] images;
     String[] usernames;
 
-    public ChatAdapter(Context context, String[] usernames, int[]images){
+    public ChatAdapter(Context context, String[] usernames){
         super(context, R.layout.chat_item, R.id.chatText, usernames);
         this.context = context;
-        this.images = images;
         this.usernames = usernames;
     }
 
@@ -179,21 +183,24 @@ class ChatAdapter extends ArrayAdapter<String>{
         } else {
             holder = (ChatViewHolder) singleItem.getTag();
         }
-        holder.userImage.setImageResource(images[position]);
+        //holder.userImage.setImageResource( images[position] );
+        //new DownloadImageTask(holder.userImage).execute( images[position] );
+
         holder.username.setText(usernames[position]);
-        Log.e("ProgramAdapter", "adapter has "+usernames[position] );
         return super.getView(position, convertView, parent);
     }
 
 }
 
 class ChatViewHolder {
-    ImageView userImage;
+
     TextView username;
     ChatViewHolder(View v) {
-        userImage = v.findViewById(R.id.chatImage);
         username = v.findViewById(R.id.chatText);
     }
 }
+
+
+
 
 
