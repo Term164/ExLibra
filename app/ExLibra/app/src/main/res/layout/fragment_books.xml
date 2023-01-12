@@ -7,43 +7,154 @@
     android:theme="@style/AppTheme"
     tools:context=".booksFragment">
 
-    <!--
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    -->
+        <!-- app:layout_constraintTop_toBottomOf="@+id/my_child_toolbar" -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:listDivider"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="25dp"
+            android:background="@color/browser_actions_bg_grey"
             android:orientation="vertical"
-            android:showDividers="middle">
+            android:padding="10dp">
 
-
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:divider="@android:color/background_light"
-                android:dividerHeight="10sp">
-
-            </ListView>
-
-
-            <!--
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rentingBooksView"
+            <ImageView
+                android:id="@+id/imageView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp" />
-            -->
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/add_book" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SELECT BOOK"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/dropdown_books"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown"
+                android:layout_marginBottom="10dp"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PRICE"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/book_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_price"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/OPIS"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/book_description"
+                android:layout_width="match_parent"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:lines="4"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SUBMIT"
+                android:layout_margin="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 
-    <!--
     </ScrollView>
-    -->
 
+    <!--
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_done_24dp"
+
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+-->
+
+
+
+    <!--app:layout_constraintBottom_toBottomOf="@+id/correct"
+    app:layout_constraintEnd_toStartOf="@+id/correct" -->
 
 </FrameLayout>
+
+
+
+    <!-- <?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/AppTheme"
+        tools:context=".booksFragment">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:listDivider"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+
+                <ListView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:divider="@android:color/background_light"
+                    android:dividerHeight="10sp">
+
+                </ListView>
+
+
+
+
+            </LinearLayout>
+
+
+
+
+    </FrameLayout>
+    -->

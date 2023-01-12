@@ -127,7 +127,7 @@ public class booksFragment extends Fragment {
                 }
 
                 ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getActivity(), android.R.layout.simple_list_item_1, items);
-                list.setAdapter(adapter);
+            //    list.setAdapter(adapter);
 
             }
         });
