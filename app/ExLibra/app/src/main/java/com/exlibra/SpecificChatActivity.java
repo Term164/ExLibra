@@ -40,8 +40,8 @@ public class SpecificChatActivity extends AppCompatActivity {
 
     String TAG = "DEBUG";
 
-    static String groupId;
-    static String hisUsername;
+    String groupId;
+    String hisUsername;
 
     ListView list;
     ArrayAdapter<String> adapter;
@@ -68,9 +68,7 @@ public class SpecificChatActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         usr = FirebaseAuth.getInstance().getCurrentUser();
         myEmail = usr.getEmail();
-        getUsername();
-        Log.e(TAG, "onCreate: "+myUsername );
-        //getChatWithUser(groupId);
+        getMyUsername();
 
         ImageButton sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -81,14 +79,9 @@ public class SpecificChatActivity extends AppCompatActivity {
                 messageInput.setText("");
                 if (input.equals(""))
                     return;
-
-                Log.e(TAG, "USER SENT BY"+myUsername );
-
-
                 ArrayList<String> arrayList = new ArrayList<>();
-
                 if (list.getAdapter() == null) {
-                    adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+                    adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList); // simple_spinner
                 }else{
                     adapter = (ArrayAdapter<String>) list.getAdapter();
                 }
@@ -97,7 +90,6 @@ public class SpecificChatActivity extends AppCompatActivity {
                 myEmail = usr.getEmail();
 
                 CollectionReference messageCollection = db.collection("/group").document(groupId).collection("/messages");
-
                 Map<String, Object> messageObject = new HashMap<>();
                 messageObject.put("sentBy", myUsername);
                 messageObject.put("messageText", input);
@@ -105,39 +97,30 @@ public class SpecificChatActivity extends AppCompatActivity {
 
                 messageCollection.add(messageObject);
 
-                Object timestamp = (FieldValue.serverTimestamp());
-                String time;
-                try {
-                    time = " ("+timestamp.toString().split(" ")[3]+")";
-                }catch (Exception e){
-                    Log.e(TAG, "got "+ timestamp.toString() );
-                    Log.e(TAG, e.toString());
-                    time = " (now)";
-                }
-
                 // izpišeš
-                String line = myEmail+time+":\n"+input;
+                String line = myEmail+" (now)"+":\n"+input;
                 adapter.add(line);
                 list.setAdapter(adapter);
-
             }
 
         });
 
-        // Listens for chat updates
+        // Listens for chat updates, almost in real time (very close)
         db.collection("/group").document(groupId).collection("/messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {Log.w(TAG, "listen:error", error); return;}
+                if (error != null) {
+                    Log.e(TAG, "listen:error", error);
+                    return;
+                }
 
                 for (DocumentChange dc : value.getDocumentChanges()) {
+                    Log.e(TAG, "Document Change: "+dc.getType());
                     if (dc.getType() != DocumentChange.Type.ADDED){
                         getChatWithUser(groupId);
                         return;
                     }
-                    Log.e(TAG, "UPDATE: "+dc.getDocument().getData() );
                     Map<String, Object> data = dc.getDocument().getData();
-
                     String line = data.get("sentBy")+" (now)"+":\n" +
                             data.get("messageText");
 
@@ -145,34 +128,30 @@ public class SpecificChatActivity extends AppCompatActivity {
                     adapter.add(line);
                 }
                 list.setAdapter(adapter);
-
             }
         });
 
+        // fill the chat with preexisting messages
         getChatWithUser(groupId);
-
     }
 
 
-
-    void getUsername(){
+    void getMyUsername(){
         db.collection("users").document(usr.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (!task.isSuccessful()) return;
                 myUsername = task.getResult().getString("username");
-                Log.e(TAG, "USERNAME "+myUsername );
             }
         });
     }
 
 
-    //method to get and display search results
+    /**
+     * Gets all messages (in order) from Firebase and displays them in a ListView
+     * @param groupId An Id of the group you'd like to display messages from
+     */
     private void getChatWithUser(String groupId) {
-        //initialise firestore connection
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
-
         CollectionReference cr = db.collection("/group").document(groupId).collection("/messages");
         cr.orderBy("sentAt").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -190,8 +169,10 @@ public class SpecificChatActivity extends AppCompatActivity {
                     Date timestamp = ((Timestamp)(message.get("sentAt"))).toDate();
                     String time;
                     try {
-                        time = " ("+timestamp.toString().split(" ")[3]+")";
+                        String[] splitTime = timestamp.toString().split(" ");
+                        time = " ("+splitTime[3]+")";
                     }catch (Exception e){
+                        Log.e(TAG, "Error while converting timestamp");
                         time = "";
                     }
                     String line = message.getString("sentBy")+time+":\n" +
@@ -199,14 +180,12 @@ public class SpecificChatActivity extends AppCompatActivity {
 
                     adapter.add(line);
                 }
-                // Actually displays messasges inapp
+                // Actually displays messasges in app
                 list.setAdapter(adapter);
             }
         });
 
     }
-
-
 
 
 }

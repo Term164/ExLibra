@@ -24,6 +24,15 @@ export default function PageChat(props) {
 		getData();
 	},[user]);
 
+	useEffect(() => {
+		if(gid) {
+			let currentElement = document.getElementById(gid);
+			currentElement.classList.add('selected');
+			const scroll = currentElement.parentNode;
+			scroll.selectedItem = currentElement;
+		}
+	},[gid])
+
 	const addNewMessage = (message) =>{
 		setMessages((t)=>[...t,message]);
 	}
@@ -45,17 +54,17 @@ export default function PageChat(props) {
 	function renderUsers(){
 		if(users){
 			return users.map(doc => {
-				return <div key={doc.gid} onClick={(e) => {
+				return <div key={doc.gid} id={doc.gid} onClick={(e) => {
 					loadMessagesAndListenToChanges(doc.gid);
 
 					const item = e.currentTarget;
 					const scroll = item.parentNode;
 		
 					let oldSelectedItem = scroll.selectedItem;
-					if (item != scroll.selectedItem && oldSelectedItem != null) {
+					if (item !== scroll.selectedItem && oldSelectedItem != null) {
 						oldSelectedItem.classList.remove('selected');
 					}
-					if (item != scroll.selectedItem) {
+					if (item !== scroll.selectedItem) {
 						item.classList.add('selected');
 						scroll.selectedItem = item;
 					}

@@ -12,17 +12,18 @@ export default class PageBooks extends React.Component {
 		  books: [],
 		  predmeti: [], 
 		  fakultete: [],
+		  loading: false
 		};
 		this.componentDidMount = this.componentDidMount.bind(this);
 	}
 
 	async componentDidMount() {
-		this.setState({books: []});
+		this.setState({loading: true});
 		const books = await getOglas();
 		const data = await getPredmetiInFakultete();
 		const predmeti = data.predmeti;
 		const fakultete = data.fakultete;
-		this.setState({ books, predmeti, fakultete });
+		this.setState({ books, predmeti, fakultete, loading: false});
 	}
 	
 
@@ -159,8 +160,7 @@ export default class PageBooks extends React.Component {
 						</div>
 					</div>
 					<div className="items">
-
-						{results.length === 0 ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
+						{this.state.loading ? <div className='loading'><span className='spinner'><SpinningCircles/></span></div> : results}
 					</div>
 				</div>
 			</div>

@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,18 +51,23 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
     ListView list;
     Context fragContext;
 
+    // =========== List Data Structure (and helper variables) ===============
     ArrayList<String> groupIds = new ArrayList<>();
-    ArrayList<String> userIds = new ArrayList<>();
+
+    HashMap<String, String> bookIds_bookNames = new HashMap<>();
     ArrayList<String> adBookNames = new ArrayList<>();
-    ArrayList<String> adSellers = new ArrayList<>();
+
     ArrayList<Double> adPrices = new ArrayList<>();
-    //ArrayList<Integer> adImages = new ArrayList<Integer>();
+
+    ArrayList<String> userIds = new ArrayList<>();
+    HashMap<String, String> userIds_userNames = new HashMap<>();
+    ArrayList<String> adSellers = new ArrayList<>();
 
     ArrayAdapter<String> classicAdapter;
-    ArrayList<String> lines;
 
     boolean finish1 = false;
     boolean finish2 = false;
+    // =============== End of List Data Structures =================
 
     FirebaseFirestore db;
     FirebaseUser usr;
@@ -97,6 +103,10 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        usr = FirebaseAuth.getInstance().getCurrentUser();
+
         Log.e(TAG, "onCreate: " + getView());
         list = getView().findViewById(R.id.adList);
         list.setOnItemClickListener(this);
@@ -105,69 +115,45 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     }
 
-
+    /**
+     * Gets all ads from Firebase and fills the ListView with them.
+     * Along with all ads, corresponding usernames and booknames are pulled.
+     */
     public void getAds(){
-        db = FirebaseFirestore.getInstance();
-        usr = FirebaseAuth.getInstance().getCurrentUser(); // probably not needed
+        CollectionReference cr_users = db.collection("/users");
+        cr_users.get().addOnCompleteListener(task -> {
+            // map user id to username
+            for (DocumentSnapshot doc : task.getResult().getDocuments())
+                userIds_userNames.put(doc.getId(), doc.getString("username"));
 
-        CollectionReference cr = db.collection("/oglas");
-        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (!task.isSuccessful())
-                    return;
-
-                int num = task.getResult().getDocuments().size();
-                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-
-                    ((DocumentReference)doc.get("knjiga")).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (!task.isSuccessful()) return;
-                            adBookNames.add( task.getResult().getString("ime") );
-                            Log.e(TAG, "added "+task.getResult().getString("ime") );
-                            if (adBookNames.size() >= num) finish1 = true;
-                            if (finish1 && finish2) fillList();
-
-                        }
+            CollectionReference cr_ads = db.collection("/oglas");
+            cr_ads.get().addOnCompleteListener(task1 -> {
+                int numOfAds = task1.getResult().size();
+                for (DocumentSnapshot doc : task1.getResult().getDocuments()) { // go through all ads
+                    ((DocumentReference)doc.get("knjiga")).get().addOnCompleteListener(task2 -> {
+                        userIds.add(doc.getString("prodajalec"));
+                        adSellers.add( userIds_userNames.get(doc.getString("prodajalec")));
+                        adPrices.add(doc.getDouble("cena"));
+                        adBookNames.add( task2.getResult().getString("ime") );
+                        if (adBookNames.size() >= numOfAds)
+                            fillList();
                     });
-
-                    db.collection("users").document( doc.getString("prodajalec") ).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (!task.isSuccessful()) return;
-                            userIds.add(doc.getString("prodajalec"));
-                            adSellers.add( task.getResult().getString("username") );
-                            if (adSellers.size() >= num) finish2 = true;
-                            if (finish1 && finish2) fillList();
-
-                        }
-                    });
-
-                    adPrices.add(doc.getDouble("cena"));
                 }
-
-            }
+            });
         });
-
     }
 
     void fillList(){
-        finish1 = false;
-        finish2 = false;
-        lines = new ArrayList<>();
+        ArrayList lines = new ArrayList<>();
         for (int i = 0; i < adBookNames.size(); i++) {
-            String line = adBookNames.get(i)+"\n"+adSellers.get(i)+"\n"+ adPrices.get(i);
+            String line = adBookNames.get(i) + "\n" +
+                    adSellers.get(i) + "\n" +
+                    adPrices.get(i) + "€";
             lines.add(line);
         }
         classicAdapter = new ArrayAdapter<String>(fragContext, android.R.layout.simple_list_item_1, lines);
 
-        Log.e(TAG, "DONE " );
         list.setAdapter(classicAdapter);
-        Log.e("BOOKS", "Books "+adSellers.size() );
-        for (String ime : adSellers) {
-            Log.e("BOOKS", "BOOKS"+ ime );
-        }
     }
 
 
@@ -197,57 +183,52 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
 
+    /**
+     * On click, triggers a group chat pipeline.
+     * Checks if a groupchat with user already exists
+     * If yes, switch to that
+     * Otherwise, create a group, add it to both users, jump to it
+    */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Log.e(TAG, "user: "+adSellers.get(i)+": "+userIds.get(i) );
-
         makeMyGroups(usr.getUid(), i);
     }
-
+    ArrayList tempArrayList;
     void makeMyGroups(String myId, int hisI){
-        db.collection("users").document(myId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                arrayList =  (ArrayList)task.getResult().get("groups");
-                Log.e(TAG, "onComplete: "+ arrayList.size());
-                String[] myGroups = makeStringArray(arrayList);
-
-                makeHisGroups(hisI, myGroups);
-            }
+        db.collection("users").document(myId).get().addOnCompleteListener(task -> {
+            tempArrayList =  (ArrayList)task.getResult().get("groups");
+            String[] myGroups = makeStringArray(tempArrayList);
+            printArray(myGroups);
+            makeHisGroups(hisI, myGroups);
         });
     }
 
     void makeHisGroups(int hisI, String[] myGroups){
-        db.collection("users").document(userIds.get(hisI)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                arrayList =  (ArrayList)task.getResult().get("groups");
-                Log.e(TAG, "onComplete: "+ arrayList.size());
-                String[] hisGroups = makeStringArray(arrayList);
-
-                compareGroups(myGroups, hisGroups, hisI);
-            }
+        db.collection("users").document(userIds.get(hisI)).get().addOnCompleteListener(task -> {
+            tempArrayList =  (ArrayList)task.getResult().get("groups");
+            String[] hisGroups = makeStringArray(tempArrayList);
+            printArray(hisGroups);
+            compareGroups(myGroups, hisGroups, hisI);
         });
     }
 
     void compareGroups(String[] myGroups, String[] hisGroups, int hisI){
-        int matching = 0;
+        boolean matched = false;
         String matchingGroup = "";
         for (int j = 0; j < hisGroups.length; j++) {
             for (int k = 0; k < myGroups.length; k++) {
                 if (hisGroups[j].equals(myGroups[k])) {
-                    matching++;
                     matchingGroup = hisGroups[j];
+                    matched = true;
+                    break;
                 }
             }
         }
-        if (matching == 1){
-            String gid = matchingGroup;
-            startChatIntet(gid, hisI);
-        } else {
+        if (matched)
+            startChatIntent(matchingGroup, hisI);
+        else
             makeNewChatGroup(hisI);
-        }
-
     }
 
     void makeNewChatGroup(int hisI){
@@ -261,7 +242,6 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
         df.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Log.e(TAG, "Created "+df.getId() );
                 setMyGroup(df.getId(), hisI);
             }
         });
@@ -298,7 +278,7 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
                 db.collection("users").document(userIds.get(hisI)).set(me).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        startChatIntet(gid, hisI);
+                        startChatIntent(gid, hisI);
                     }
                 });
             }
@@ -306,33 +286,18 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     }
 
-    void startChatIntet(String gid, int hisI){
+    void startChatIntent(String gid, int hisI){
         Intent intent = new Intent(getActivity(), SpecificChatActivity.class);
         intent.putExtra("gid", gid);
         intent.putExtra("hisUsername", adSellers.get(hisI));
         startActivity(intent);
     }
-
+    // ================== End of group chat pipeline ===================
 
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-    ArrayList<String> arrayList;
-    String[] getGroups(String userId){
-
-        db.collection("users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                arrayList =  (ArrayList)task.getResult().get("groups");
-                Log.e(TAG, "onComplete: "+ arrayList.size());
-            }
-        });
-        return null;
-    }
-
-
 
 
 
@@ -358,8 +323,16 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
         }
         return arr;
     }
+    void printArray(String[] arr){
+        System.out.print(arr.length+": ");
+        for (String s : arr) {
+            System.out.print(s+", ");
+        }
+        System.out.println();
+    }
 
 }
+
 
 // Helper classes for displaying an entire ad as a list item
 class AdAdapter extends ArrayAdapter<String> {
