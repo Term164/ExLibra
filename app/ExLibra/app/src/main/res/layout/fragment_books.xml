@@ -42,9 +42,10 @@
                 android:id="@+id/dropdown_books"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:background="@android:drawable/btn_dropdown"
                 android:spinnerMode="dropdown"
-                android:layout_marginBottom="10dp"/>
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
             <TextView
@@ -62,24 +63,26 @@
                 android:layout_marginBottom="10dp"
                 android:autofillHints="@string/book_price"
                 android:ems="10"
-                android:inputType="number"
-                android:textColor="@color/colorAccent" />
+                android:inputType="number|numberDecimal"
+                android:textColor="@color/colorAccent"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/OPIS"
+                android:text="@string/DESCRIPTION"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/book_description"
                 android:layout_width="match_parent"
-                android:inputType="textMultiLine"
-                android:gravity="top"
-                android:lines="4"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent" />
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="4"
+                android:textColor="@color/colorAccent"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <Button
                 android:id="@+id/submit"

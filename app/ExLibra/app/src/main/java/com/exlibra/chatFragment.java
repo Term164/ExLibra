@@ -190,12 +190,6 @@ public class chatFragment extends Fragment {
             }
         });
 
-        //query all documents on the market with the input isbn
-        //db.collection("books").whereEqualTo("isbn", input).whereEqualTo("market", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-        // });
-
-
-
     }
 
 

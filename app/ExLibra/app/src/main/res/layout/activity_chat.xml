@@ -9,6 +9,19 @@
     tools:context=".ChatActivity">
 
 
+    <TextView
+        android:id="@+id/nochats"
+        android:layout_width="match_parent"
+        android:layout_height="205dp"
+        android:layout_gravity="bottom|center|start|right|left|end"
+        android:layout_margin="10dp"
+        android:layout_weight="2"
+        android:gravity="bottom|center|start|right|top|left|end"
+        android:text="To start chatting with a user, select one of his ads. \nYour active chats will be displayed here."
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black"
+        android:visibility="visible" />
+
     <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"

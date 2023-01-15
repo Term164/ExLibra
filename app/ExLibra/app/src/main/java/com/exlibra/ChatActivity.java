@@ -3,17 +3,10 @@ package com.exlibra;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,13 +30,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -51,6 +40,8 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
 
     String TAG = "DEBUG";
     ListView list;
+    TextView nochats;
+
     ArrayList<String> groupIds = new ArrayList<>();
     ArrayList<String> groupIds_ordered = new ArrayList<>();
     ArrayList<String> usernames = new ArrayList<>();
@@ -64,6 +55,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_chat);
         list = findViewById(R.id.list);
         list.setOnItemClickListener(this);
+        nochats = findViewById(R.id.nochats);
 
         chatActivityContext = this;
         getUserChatGroups();
@@ -75,6 +67,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final FirebaseUser usr = FirebaseAuth.getInstance().getCurrentUser();
         String myUserId = FirebaseAuth.getInstance().getUid();
+        nochats.setVisibility(View.GONE);
         CollectionReference cr = db.collection("/users");
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -107,6 +100,10 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
                         ChatAdapter chatAdapter = new ChatAdapter(chatActivityContext, usernamesString);
                         Log.e(TAG, "adapter has "+chatAdapter.usernames.length+" usernames");
                         list.setAdapter(chatAdapter);
+                        if (usernamesString.length == 0) {
+                            Toast.makeText(getApplicationContext(), "No active chats found.", Toast.LENGTH_LONG).show();
+                            nochats.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }

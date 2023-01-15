@@ -79,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-
                         String UID = mAuth.getCurrentUser().getUid();
 
                         FirebaseFirestore db = FirebaseFirestore.getInstance();

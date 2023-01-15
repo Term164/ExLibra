@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
                     return true;
                 case R.id.action_books:
                     FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                    selectedFragment = booksFragment.newInstance("books", "fragment", db);
+                    selectedFragment = booksFragment.newInstance("books", "fragment");
                     transaction2.replace(R.id.content, selectedFragment);
                     transaction2.commit();
                     return true;
@@ -147,8 +147,6 @@ public class HomeActivity extends AppCompatActivity implements homeFragment.OnFr
         getMenuInflater().inflate(R.menu.action_bar, menu);
         return true;
     }
-
-
 
     //initialise toolbar actions
     @Override

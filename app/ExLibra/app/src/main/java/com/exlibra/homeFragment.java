@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,15 +54,13 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     // =========== List Data Structure (and helper variables) ===============
     ArrayList<String> groupIds = new ArrayList<>();
-
     HashMap<String, String> bookIds_bookNames = new HashMap<>();
     ArrayList<String> adBookNames = new ArrayList<>();
-
     ArrayList<Double> adPrices = new ArrayList<>();
-
     ArrayList<String> userIds = new ArrayList<>();
     HashMap<String, String> userIds_userNames = new HashMap<>();
     ArrayList<String> adSellers = new ArrayList<>();
+    ArrayList<String> adDescs = new ArrayList<>();
 
     ArrayAdapter<String> classicAdapter;
 
@@ -90,7 +89,6 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -134,6 +132,7 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
                         userIds.add(doc.getString("prodajalec"));
                         adSellers.add( userIds_userNames.get(doc.getString("prodajalec")));
                         adPrices.add(doc.getDouble("cena"));
+                        adDescs.add(doc.getString("opis"));
                         adBookNames.add( task2.getResult().getString("ime") );
                         if (adBookNames.size() >= numOfAds)
                             fillList();
@@ -148,7 +147,8 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
         for (int i = 0; i < adBookNames.size(); i++) {
             String line = adBookNames.get(i) + "\n" +
                     adSellers.get(i) + "\n" +
-                    adPrices.get(i) + "€";
+                    adPrices.get(i) + "€\n" +
+                    adDescs.get(i);
             lines.add(line);
         }
         classicAdapter = new ArrayAdapter<String>(fragContext, android.R.layout.simple_list_item_1, lines);
@@ -196,6 +196,11 @@ public class homeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
     ArrayList tempArrayList;
     void makeMyGroups(String myId, int hisI){
+        if (myId.equals(userIds.get(hisI))){
+            Toast.makeText(getActivity(), "You own this ad.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         db.collection("users").document(myId).get().addOnCompleteListener(task -> {
             tempArrayList =  (ArrayList)task.getResult().get("groups");
             String[] myGroups = makeStringArray(tempArrayList);

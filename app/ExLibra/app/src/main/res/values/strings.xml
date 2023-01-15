@@ -23,33 +23,20 @@
     <string name="title_activity_home">HomeActivity</string>
     <!-- BOOKSTORE -->
     <string name="home">Home</string>
-    <string name="books">Books</string>
+    <string name="books">Sell a Book</string>
     <string name="search">Search</string>
     <string name="logoutActionBar"> Logout </string>
     <string name="Profile">Profile</string>
     <string name="chat">Chat</string>
-    <string name="profile">profile</string>
-    <string name="change">change</string>
-    <string name="graduating_class">graduating_class</string>
-    <string name="major">major</string>
-    <string name="save">save</string>
-    <string name="cancel">cancel</string>
-    <string name="male">male</string>
-    <string name="female">female</string>
-    <string name="gender">gender</string>
+
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
     <string name="phone">phone</string>
-    <string name="email">email</string>
     <string name="name">name</string>
-    <string name="profile_photo_file_name">profile_photo_file_name</string>
-    <string name="pick_profile_picture">pick_profile_picture</string>
     <string name="settings">Settings</string>
-    <string name="title_caps">title_caps</string>
-    <string name="isbn">isbn</string>
-    <string name="author_caps">author_caps</string>
-    <string name="genre_caps">genre_caps</string>
-    <string name="book_name">book_name</string>
+
     <string name="book_price">book_price</string>
     <string name="PRICE">PRICE</string>
-    <string name="OPIS">OPIS</string>
+    <string name="DESCRIPTION">DESCRIPTION</string>
 
 </resources>
