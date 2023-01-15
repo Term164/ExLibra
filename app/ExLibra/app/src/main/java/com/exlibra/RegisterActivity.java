@@ -78,7 +78,6 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
                         String UID = mAuth.getCurrentUser().getUid();
 
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -91,22 +90,13 @@ public class RegisterActivity extends AppCompatActivity {
                         user.put("name", "");
                         user.put("surname", "");
                         user.put("tel", "");
-                        user.put("profileurl", "https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4"); //  pa pfp/default.png
+                        user.put("profileurl", "https://firebasestorage.googleapis.com/v0/b/exlibra-563bd.appspot.com/o/pfp%2Fdefault.png?alt=media&token=aa0a928f-af17-4f5a-b835-cc53305ee0a4"); // default.png
                         user.put("ads", new ArrayList<Object>());
                         user.put("wishlist", new ArrayList<Object>());
                         user.put("groups", new ArrayList<Object>());
 
-                        users.document(UID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void avoid) {
-                                Log.d("SUCCESS CREATING", "User successfully added.");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e("FAILURE CREATING", "Error while adding user.", e);
-                            }
+                        users.document(UID).set(user).addOnCompleteListener(task1 -> {
+                            Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
                         });
 
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
